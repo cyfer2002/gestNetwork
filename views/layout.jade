@@ -9,4 +9,8 @@ html
       link(href='/assets/' + assetManifest.application.find(function (x) {return x.endsWith('.css');}), rel='stylesheet')
       script(src='/assets/' + assetManifest.application.find(function (x) {return x.endsWith('.js');}))
   body
-    block content
+    .header
+      h1.page-title #{title}
+    .main-content
+      block content
+    .footer

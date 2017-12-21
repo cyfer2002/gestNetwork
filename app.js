@@ -9,6 +9,9 @@ var _ = require('lodash');
 var session = require('client-sessions');
 var config = require('./config/config');
 
+// Variable base de données
+var db = require('./config/db-config');
+
 var routes = require('./config/routes');
 
 var app = express();
