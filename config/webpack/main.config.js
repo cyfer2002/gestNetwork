@@ -20,7 +20,7 @@ module.exports = {
     // the filename of the compiled bundle, e.g. app/assets/javascripts/bundle.js
     filename: 'application.js',
     // if the webpack code-splitting feature is enabled, this is the path it'll use to download bundles
-    publicPath: '/static/',
+    publicPath: '/',
     devtoolModuleFilenameTemplate: '[resourcePath]',
     devtoolFallbackModuleFilenameTemplate: '[resourcePath]?[hash]'
   },
