@@ -1,0 +1,12 @@
+doctype html
+html
+  head
+    title= title
+    - if (environment === 'development')
+      link(href='application.css', rel='stylesheet')
+      script(src='application.js')
+    - else
+      link(href='/assets/' + assetManifest.application.find(function (x) {return x.endsWith('.css');}), rel='stylesheet')
+      script(src='/assets/' + assetManifest.application.find(function (x) {return x.endsWith('.js');}))
+  body
+    block content
