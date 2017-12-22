@@ -1,0 +1,267 @@
+-- -----------------------------------------------------------------------------
+--             Génération d'une base de données pour
+--                      PROGRESS 9.1
+--                        (22/12/2017 11:36:35)
+-- -----------------------------------------------------------------------------
+--      Nom de la base : MLR7
+--      Projet : 
+--      Auteur : Vatin
+--      Date de dernière modification : 22/12/2017 11:35:47
+-- -----------------------------------------------------------------------------
+
+DROP TABLE SWITCH;
+
+DROP TABLE PRISERESEAU;
+
+DROP TABLE SLOT;
+
+DROP TABLE PILESWITCH;
+
+DROP TABLE BANDEAURESEAU;
+
+DROP TABLE LOCALVDI;
+
+DROP TABLE PORT;
+
+DROP TABLE ARMOIRERESEAU;
+
+-- -----------------------------------------------------------------------------
+--       CREATION DE LA BASE 
+-- -----------------------------------------------------------------------------
+
+CREATE DATABASE MLR7;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : SWITCH
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE SWITCH
+   (
+    SWITCHID NUMBER(4) NOT NULL ,
+    NOMPILE VARCHAR(255) NOT NULL ,
+    NUMEROSWITCH INTEGER NOT NULL ,
+    NBSLOT INTEGER NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL 
+,   CONSTRAINT PK_SWITCH PRIMARY KEY (SWITCHID) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE SWITCH
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_SWITCH_PILESWITCH
+     ON SWITCH (NOMPILE ASC)
+     ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : PRISERESEAU
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE PRISERESEAU
+   (
+    PRISEID NUMBER(4) NOT NULL ,
+    BANDEAUID NUMBER(4) NOT NULL ,
+    NUMEROPRISE NUMBER(4) NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL ,
+    PORTID CHARACTER(32) NOT NULL 
+,   CONSTRAINT PK_PRISERESEAU PRIMARY KEY (PRISEID) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE PRISERESEAU
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_PRISERESEAU_BANDEAURESEAU
+     ON PRISERESEAU (BANDEAUID ASC)
+     ;
+
+CREATE  INDEX I_FK_PRISERESEAU_PORT
+     ON PRISERESEAU (PORTID ASC)
+     ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : SLOT
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE SLOT
+   (
+    SLOTID SMALLINT NOT NULL ,
+    SWITCHID NUMBER(4) NOT NULL ,
+    NUMEROSLOT SMALLINT NOT NULL ,
+    NBPORTS INTEGER NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL 
+,   CONSTRAINT PK_SLOT PRIMARY KEY (SLOTID) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE SLOT
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_SLOT_SWITCH
+     ON SLOT (SWITCHID ASC)
+     ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : PILESWITCH
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE PILESWITCH
+   (
+    NOMPILE VARCHAR(255) NOT NULL ,
+    ARMOIREID NUMBER(4) NOT NULL ,
+    NBSWITCH INTEGER NOT NULL ,
+    DESCRIPTION VARCHAR(255) NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL 
+,   CONSTRAINT PK_PILESWITCH PRIMARY KEY (NOMPILE) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE PILESWITCH
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_PILESWITCH_ARMOIRERESEAU
+     ON PILESWITCH (ARMOIREID ASC)
+     ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : BANDEAURESEAU
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE BANDEAURESEAU
+   (
+    BANDEAUID NUMBER(4) NOT NULL ,
+    ARMOIREID NUMBER(4) NOT NULL ,
+    NUMEROBANDEAU CHARACTER(32) NOT NULL ,
+    NBPRISES NUMBER(4) NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL 
+,   CONSTRAINT PK_BANDEAURESEAU PRIMARY KEY (BANDEAUID) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE BANDEAURESEAU
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_BANDEAURESEAU_ARMOIRERESEAU
+     ON BANDEAURESEAU (ARMOIREID ASC)
+     ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : LOCALVDI
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE LOCALVDI
+   (
+    LOCALVDIID NUMBER(4) NOT NULL ,
+    BATIMENT VARCHAR(255) NOT NULL ,
+    ETAGE CHARACTER(1) NOT NULL ,
+    AILE CHARACTER(32) NOT NULL ,
+    NBARMOIRE SMALLINT NOT NULL ,
+    DESCRIPTION VARCHAR(255) NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL 
+,   CONSTRAINT PK_LOCALVDI PRIMARY KEY (LOCALVDIID, BATIMENT, ETAGE, AILE) 
+   );
+-- -----------------------------------------------------------------------------
+--       TABLE : PORT
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE PORT
+   (
+    PORTID NUMBER(4) NOT NULL ,
+    SLOTID SMALLINT NOT NULL ,
+    NUMEROPORT INTEGER NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL ,
+    PRISEID CHARACTER(32) NOT NULL 
+,   CONSTRAINT PK_PORT PRIMARY KEY (PORTID) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE PORT
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_PORT_SLOT
+     ON PORT (SLOTID ASC)
+     ;
+
+CREATE  INDEX I_FK_PORT_PRISERESEAU
+     ON PORT (PRISEID ASC)
+     ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : ARMOIRERESEAU
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE ARMOIRERESEAU
+   (
+    ARMOIREID NUMBER(4) NOT NULL ,
+    LOCALVDIID NUMBER(4) NOT NULL ,
+    NUMEROARMOIRE CHARACTER(2) NOT NULL ,
+    NBBANDEAU CHARACTER(32) NOT NULL ,
+    NBSWITCH INTEGER NOT NULL ,
+    CREATED_AT TIMESTAMP NOT NULL ,
+    UPDATED_AT TIMESTAMP NOT NULL 
+,   CONSTRAINT PK_ARMOIRERESEAU PRIMARY KEY (ARMOIREID) 
+   );
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE ARMOIRERESEAU
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_ARMOIRERESEAU_LOCALVDI
+     ON ARMOIRERESEAU (LOCALVDIID ASC)
+     ;
+
+
+-- -----------------------------------------------------------------------------
+--       CREATION DES REFERENCES DE TABLE
+-- -----------------------------------------------------------------------------
+
+
+ALTER TABLE SWITCH ADD (
+     CONSTRAINT FK_SWITCH_PILESWITCH
+          FOREIGN KEY (NOMPILE)
+               REFERENCES PILESWITCH (NOMPILE)) ;
+
+ALTER TABLE PRISERESEAU ADD (
+     CONSTRAINT FK_PRISERESEAU_BANDEAURESEAU
+          FOREIGN KEY (BANDEAUID)
+               REFERENCES BANDEAURESEAU (BANDEAUID)) ;
+
+ALTER TABLE PRISERESEAU ADD (
+     CONSTRAINT FK_PRISERESEAU_PORT
+          FOREIGN KEY (PORTID)
+               REFERENCES PORT (PORTID)) ;
+
+ALTER TABLE SLOT ADD (
+     CONSTRAINT FK_SLOT_SWITCH
+          FOREIGN KEY (SWITCHID)
+               REFERENCES SWITCH (SWITCHID)) ;
+
+ALTER TABLE PILESWITCH ADD (
+     CONSTRAINT FK_PILESWITCH_ARMOIRERESEAU
+          FOREIGN KEY (ARMOIREID)
+               REFERENCES ARMOIRERESEAU (ARMOIREID)) ;
+
+ALTER TABLE BANDEAURESEAU ADD (
+     CONSTRAINT FK_BANDEAURESEAU_ARMOIRERESEAU
+          FOREIGN KEY (ARMOIREID)
+               REFERENCES ARMOIRERESEAU (ARMOIREID)) ;
+
+ALTER TABLE PORT ADD (
+     CONSTRAINT FK_PORT_SLOT
+          FOREIGN KEY (SLOTID)
+               REFERENCES SLOT (SLOTID)) ;
+
+ALTER TABLE PORT ADD (
+     CONSTRAINT FK_PORT_PRISERESEAU
+          FOREIGN KEY (PRISEID)
+               REFERENCES PRISERESEAU (PRISEID)) ;
+
+ALTER TABLE ARMOIRERESEAU ADD (
+     CONSTRAINT FK_ARMOIRERESEAU_LOCALVDI
+          FOREIGN KEY (LOCALVDIID)
+               REFERENCES LOCALVDI (LOCALVDIID)) ;
+
+
+-- -----------------------------------------------------------------------------
+--                FIN DE GENERATION
+-- -----------------------------------------------------------------------------

@@ -27,10 +27,27 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 //Models/tables
-db.user = require('./models/users.js')(sequelize, Sequelize);
+db.users = require('./models/users.js')(sequelize, Sequelize);
+db.locauxvdis = require('./models/locauxVdis.js')(sequelize, Sequelize);
+db.armoiresreseaux = require('./models/armoiresReseaux.js')(sequelize, Sequelize);
+db.bandeauxreseaux = require('./models/bandeauxReseaux.js')(sequelize, Sequelize);
+db.prisesreseaux = require('./models/prisesReseaux.js')(sequelize, Sequelize);
+
+db.pilesswitchs = require('./models/pilesSwitchs.js')(sequelize, Sequelize);
+db.slots = require('./models/slots.js')(sequelize, Sequelize);
+db.switchs = require('./models/switchs.js')(sequelize, Sequelize);
+db.portsreseaux = require('./models/portsReseaux.js')(sequelize, Sequelize);
 
 //Relations
-//db.user.hasMany(db.entries, {foreignKey: 'usertable_id'});
+db.locauxvdis.hasMany(db.armoiresreseaux, {foreignKey: 'localvdiid'});
+db.armoiresreseaux.hasMany(db.bandeauxreseaux, {foreignKey: 'armoireid'});
+db.armoiresreseaux.hasMany(db.pilesswitchs, {foreignKey: 'armoireid'});
+db.bandeauxreseaux.hasMany(db.prisesreseaux, {foreignKey: 'bandeauid'});
+db.pilesswitchs.hasMany(db.slots, {foreignKey: 'nompile'});
+db.slots.hasMany(db.switchs, {foreignKey: 'slotid'});
+db.switchs.hasMany(db.portsreseaux, {foreignKey: 'switchid'});
+db.prisesreseaux.hasOne(db.portsreseaux, {foreignKey: 'priseid'});
+
 
 sequelize
   .authenticate()
