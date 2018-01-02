@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "webpack:deploy": "webpack --config config/webpack/production.config.js",
-    "gestNetwork": "npm run webpack:deploy && nodemon start",
+    "gestNetwork": "npm run webpack:deploy && nodemon --exec 'npm start -s'",
     "start": "node ./bin/www"
   },
   "dependencies": {
