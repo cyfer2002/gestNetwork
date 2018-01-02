@@ -1,6 +1,6 @@
 import checkForm from './check_form';
 import Flash from '../lib/flash';
-import ReplaceFlash from '../lib/Replaceflash';
+import ReplaceFlash from '../lib/ReplaceFlash';
 
 const ERROR_CLASS = 'has-error';
 
