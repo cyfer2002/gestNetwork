@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/static', express.static(__dirname + '/static'));
+app.use('/', express.static(__dirname + '/static'));
 app.use('/images', express.static(__dirname + '/frontend/images'));
 app.use('/fonts', express.static(__dirname + '/frontend/fonts'));
 
