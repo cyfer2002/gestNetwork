@@ -19,9 +19,9 @@ config.db = {
   development: {
     "driver": "postgres",// votre base de donnée (mysql…)
     "host": "localhost",
-    "user": "gestNetwork",
+    "user": "badminton",
     "database": "gestNetwork",
-    "password": "gestNetwork"
+    "password": "badminton"
   }
 };
 
