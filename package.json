@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "webpack:deploy": "webpack --config config/webpack/production.config.js",
+    "gestNetwork": "npm run webpack:deploy && nodemon start",
     "start": "node ./bin/www"
   },
   "dependencies": {
