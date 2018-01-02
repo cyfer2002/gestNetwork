@@ -12,7 +12,7 @@ module.exports = {
   devtool: 'source-map',
   // the main entry point for our application's frontend JSON
   entry: {
-    application: './public/application'
+    application: './frontend/application'
   },
   output: {
     // this is our app/assets/javascripts directory, which is part of the Sprockets pipeline
