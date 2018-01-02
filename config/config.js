@@ -11,7 +11,7 @@ config.company.replyEmail   =  config.company.name + " <sport-chru@gmx.fr>";
 config.db = {
   production: {
     "driver": "mysql",// votre base de donnée (mysql…)
-    "host": "eris",
+    "host": "192.168.129.130",
     "user": "git",
     "database": "gestNetwork",
     "password": "Cd1m2ppG!"
