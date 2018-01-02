@@ -1,0 +1,51 @@
+doctype html
+html
+  head
+    link(rel="icon", href="/images/favico.ico" type="image/x-icon")
+    title= title
+    - if (environment === 'development')
+      link(href='application.css', rel='stylesheet')
+      script(src='application.js')
+    - else
+      link(href='/assets/' + assetManifest.application.find(function (x) {return x.endsWith('.css');}), rel='stylesheet')
+      script(src='/assets/' + assetManifest.application.find(function (x) {return x.endsWith('.js');}))
+  body
+    .header
+      h1.page-title #{title}
+    .navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar")
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href="/")
+            img(src="https://www.reseau-chu.org/typo3temp/pics/4e0c817dec.jpg" class="logo")
+        #navbar.navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li.visible-xs
+              a(href="/") Accueil
+            li(class='find' === id ? "active" : "")
+              a(href="/find") Find
+            li(class='services' === id ? "active" : "")
+              a(href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="menu-item-services")
+                | Ajout d'éléments&nbsp;
+                span.caret
+              ul(class="dropdown-menu" aria-labelledby="menu-item-services")
+                li
+                  a(href="#") Ajouter un élément
+                li.divider(role="separator")
+                li
+                  a(href="/addLocalVdi") Ajouter un local VDI
+                li
+                  a(href="/addArmoireReseau") Ajouter Armoire Réseau
+                li
+                  a(href="/addBandeau") Ajouter un bandeau Réseau
+                li
+                  a(href="/addPileSwitch") Ajouter une pile de Switch
+            li(class='contact' === id ? "active" : "")
+              a(href="/contact") Contact
+          ul.nav.navbar-nav.navbar-right
+            li.phone-me
+              a(href="#") Login
