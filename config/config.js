@@ -11,10 +11,10 @@ config.company.replyEmail   =  config.company.name + " <sport-chru@gmx.fr>";
 config.db = {
   production: {
     "driver": "mysql",// votre base de donnée (mysql…)
-    "host": "",
-    "user": "",
-    "database": "",
-    "password": ""
+    "host": "eris",
+    "user": "git",
+    "database": "gestNetwork",
+    "password": "Cd1m2ppG!"
   },
   development: {
     "driver": "postgres",// votre base de donnée (mysql…)
