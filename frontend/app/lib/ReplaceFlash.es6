@@ -9,7 +9,7 @@ export default class ReplaceFlash {
 
   static _display(type, message, parent) {
     let html = `
-      <div class="alert fade in alert-${type}">
+      <div class="alert alert-${type}" role="alert">
         ${message}
       </div>`;
     (parent ? $(parent) : this.element()).replaceWith($(html).delay(5000));

@@ -6,9 +6,13 @@ var fs = require('fs');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var static = require('serve-static');
+var bcrypt = require('bcrypt-nodejs');
 var _ = require('lodash');
 var session = require('client-sessions');
 var config = require('./config/config');
+var LocalStrategy = require('passport-local').Strategy;
+var passport  = require('passport');
+
 
 // Variable base de données
 var db = require('./config/db-config');
@@ -20,6 +24,53 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+// Passport Config
+app.use(passport.initialize());
+app.use(passport.session());
+
+/*
+// Generate a salt
+var salt = bcrypt.genSaltSync(10);
+// Hash the password with the salt
+var password = bcrypt.hashSync("admin", salt);
+
+db.users.create({
+  username: "admin",
+  name: "test",
+  lastName: "TEST",
+  password: password,
+  role: "admin",
+  email: "nvatin@chu-besancon.fr",
+  created_at: new Date()
+});
+*/
+
+passport.use(new LocalStrategy(function(username, password, done) {
+  process.nextTick(function() {
+    db.users.findOne({
+      where : {
+        username : username
+      }
+    }).then(result => {
+      if (result) {
+        if (bcrypt.compareSync(password, result.password)) {
+          return done(null, result);
+        }
+        else return done(null, false);
+      }
+      else return done(null, false);
+    });
+  });
+}));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 // Sessions
 app.use(session({

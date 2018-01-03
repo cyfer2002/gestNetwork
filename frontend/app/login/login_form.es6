@@ -1,10 +1,8 @@
 
 import checkForm from './check_form';
-import ReplaceFlash from '../lib/replaceflash';
 import Flash from '../lib/flash';
-import LogInUser from '../lib/loginuser';
 
-const ERROR_CLASS = 'has-error';
+const ERROR_CLASS = 'has-danger';
 
 export default class LoginForm {
   constructor(form) {
@@ -31,7 +29,8 @@ export default class LoginForm {
   resetErrors() {
     this.$form
       .find('.form-group').removeClass(ERROR_CLASS).end()
-      .find('.help-block').remove();
+      .find('.form-control').removeClass('is-invalid').end()
+      .find('.text-danger').remove();
   }
 
   onSubmit(e) {
@@ -69,9 +68,9 @@ export default class LoginForm {
           Flash.danger(data.error, this.$form);
         }
         if (data.message) {
-          ReplaceFlash.success(data.message, this.$form);
+          Flash.success(data.message, this.$form);
           this.$form[0].reset();
-          LogInUser._display(data.user.username, $('[data-target="#login"]'));
+          location.reload(false);
           setTimeout(function() { $('.modal').modal('hide'); }, 500);
         }
       },
@@ -84,6 +83,7 @@ export default class LoginForm {
   displayInputError(inputName, error) {
     this.$inputs[inputName]
       .closest('.form-group').addClass(ERROR_CLASS).end()       // Add class on form-group element
-      .after($('<span>', { class: 'help-block' }).text(error)); // Add an help-block element with the error desc
+      .closest('.form-control').addClass('is-invalid').end()
+      .after($('<small>', { class: 'text-danger' }).text(error)); // Add an help-block element with the error desc
   }
 }

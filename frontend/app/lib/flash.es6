@@ -9,7 +9,7 @@ export default class Flash {
 
   static _display(type, message, parent) {
     let html = `
-      <div class="alert fade in alert-${type}">
+      <div class="alert alert-${type}" role="alert">
         <button class="close" data-dismiss="alert" type="button">×</button>
         ${message}
       </div>`;

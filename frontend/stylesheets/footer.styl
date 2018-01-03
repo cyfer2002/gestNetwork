@@ -1,9 +1,71 @@
-.footer
-  margin 50px auto
-  max-width 600px
-  border-top 1px solid #444
-  padding 20px 0
+html, body
+  height: 100%;
+
+
+$footer-height = 150px;
+$footer-margin-top = 70px;
+$footer-total-height = $footer-height + $footer-margin-top;
+
+.wrapper
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto (-$footer-total-height); /* the bottom margin is the negative value of the footer's height */
+
+
+.push
+  height: $footer-total-height; /* .push must be the same height as .footer */
+
+
+footer
+  position: relative;
+  z-index: 10;
+  background-color: #333;
+  padding: 20px 0 20px;
+  height: $footer-height;
+  margin-top: $footer-margin-top;
+  color: white;
 
   p
-    color #FA5858
-    font-size 12px
+    margin: 0;
+
+  a
+    color: inherit;
+    white-space: nowrap;
+
+    &:hover
+      color: white;
+      text-decoration: underline;
+
+  .fa
+    padding-right: 10px;
+
+  .copyright-line
+    text-align: center;
+    font-size: 85%;
+
+  hr
+    margin-bottom: 10px;
+    border: 0;
+    clear:both;
+    display:block;
+    width: 96%;
+    background-color: white;
+    height: 1px;
+
+@media (max-width: 768px)  // @screen-sm)
+  .push
+    display: none;
+
+  html, body, footer
+    height: auto;
+
+  .wrapper
+    margin: 0;
+    min-height: auto;
+
+  footer
+    font-size: 80%;
+
+    .container .row:first-child
+      background-size: 64px 64px;

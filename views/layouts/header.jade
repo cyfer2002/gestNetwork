@@ -12,40 +12,77 @@ html
   body
     .header
       h1.page-title #{title}
-    .navbar.navbar-default
-      .container-fluid
-        .navbar-header
-          button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar")
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand(href="/")
-            img(src="https://www.reseau-chu.org/typo3temp/pics/4e0c817dec.jpg" class="logo")
-        #navbar.navbar-collapse.collapse
-          ul.nav.navbar-nav
-            li.visible-xs
-              a(href="/") Accueil
-            li(class='find' === id ? "active" : "")
-              a(href="/find") Find
-            li(class='services' === id ? "active" : "")
-              a(href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="menu-item-services")
-                | Ajout d'éléments&nbsp;
-                span.caret
-              ul(class="dropdown-menu" aria-labelledby="menu-item-services")
-                li
-                  a(href="#") Ajouter un élément
-                li.divider(role="separator")
-                li
-                  a(href="/addLocalVdi") Ajouter un local VDI
-                li
-                  a(href="/addArmoireReseau") Ajouter Armoire Réseau
-                li
-                  a(href="/addBandeau") Ajouter un bandeau Réseau
-                li
-                  a(href="/addPileSwitch") Ajouter une pile de Switch
-            li(class='contact' === id ? "active" : "")
-              a(href="/contact") Contact
-          ul.nav.navbar-nav.navbar-right
-            li.phone-me
-              a(href="#") Login
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.navbar-header
+      a.navbar-brand(href="/")
+        img.d-inline-block.align-top(src="https://www.reseau-chu.org/typo3temp/pics/4e0c817dec.jpg" class="logo" width="70" height="50")
+      button.navbar-toggler(type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation")
+        span.navbar-toggler-icon
+      #navbar.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item.d-none.d-md-block.d-lg-none
+            a.nav-link(href="/") Accueil
+          li.nav-item(class='find' === id ? "active" : "")
+            a.nav-link(href="/find") Find
+          li.nav-item.dropdown(class='services' === id ? "active" : "")
+            a(href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="menu-item-services")
+              | Ajout d'éléments&nbsp;
+              span.caret
+            div.dropdown-menu(aria-labelledby="menu-item-services")
+              a.dropdown-item(href="#")
+              a.dropdown-item(href="/addLocalVdi") Ajouter un local VDI
+              a.dropdown-item(href="/addArmoireReseau") Ajouter Armoire Réseau
+              .dropdown-divider
+              a.dropdown-item(href="/addBandeau") Ajouter un bandeau Réseau
+              a.dropdown-item(href="/addPileSwitch") Ajouter une pile de Switch
+          li.nav-item(class='contact' === id ? "active" : "")
+            a.nav-link(href="/contact") Contact
+        ul.nav.navbar-nav.navbar-right
+          li.nav-item.dropdown.loginhead(class='login' === id ? "active" : "")
+          - if (user == null)
+            a.nav-link(href="#login" data-toggle='modal' data-target='#login')
+              | Login &nbsp;
+          - else
+            a.nav-link(href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="menu-item-login")
+              | #{user.username} &nbsp;
+              span.caret
+            div.dropdown-menu.dropdown-menu-right(aria-labelledby="menu-item-login")
+              a.dropdown-item(href="#")
+              .dropdown-divider
+              a.dropdown-item(href='/logOut') Deconnexion
+  #login.login.modal.fade(role='dialog')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          .col-md-8
+            h4.modal-title.text-center Login
+          .col-md-4
+            button.close(type='button' data-dismiss='modal') &times;
+        .modal-body
+          .login-form
+            .bg
+            h4 Login
+            br
+            form(action='/login' method='post' accept-charset="UTF-8" novalidate="novalidate")
+              - if (success)
+                .alert.alert-success.message-sent
+                  button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                  | #{success}
+              - if (errors.error)
+                .alert.alert-danger.message-error
+                  button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                  | #{errors.error}
+              .form-group(class=(errors.login ? "has-danger" : ""))
+                input.form-control(type="text" name="username" placeholder="User" autofocus="1" value=params.username)
+                input.form-control(type="password" name="password" placeholder="Mot de passe" autofocus="1" value=params.password)
+                - if (errors.login)
+                  span.invalid-feedback #{errors.login}
+                h6.italic
+                  a(href='/signIn') SignIn
+              button.btn.btn-primary(type="submit")
+                .fa.fa-spinner.fa-pulse
+                | Login
+              .clearfix
+        .modal-footer
+          button(type='button', class='btn btn-default', data-dismiss='modal') Close
