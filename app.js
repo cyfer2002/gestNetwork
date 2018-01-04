@@ -21,7 +21,7 @@ var routes = require('./config/routes');
 var armoiresReseaux = require('./config/services/armoiresReseaux');
 var batiments = require('./config/services/batiments');
 var bandeauxReseaux = require('./config/services/bandeauxReseaux');
-var locauxVdis = require('./config/services/locauxVdis');
+var locauxVdis = require('./config/services/locauxvdis');
 
 var app = express();
 
