@@ -28,6 +28,7 @@ db.sequelize = sequelize;
 
 //Models/tables
 db.users = require('./models/users.js')(sequelize, Sequelize);
+db.batiments = require('./models/batiments.js')(sequelize, Sequelize);
 db.locauxvdis = require('./models/locauxVdis.js')(sequelize, Sequelize);
 db.armoiresreseaux = require('./models/armoiresReseaux.js')(sequelize, Sequelize);
 db.bandeauxreseaux = require('./models/bandeauxReseaux.js')(sequelize, Sequelize);
@@ -39,6 +40,7 @@ db.switchs = require('./models/switchs.js')(sequelize, Sequelize);
 db.portsreseaux = require('./models/portsReseaux.js')(sequelize, Sequelize);
 
 //Relations
+db.batiments.hasMany(db.locauxvdis, {foreignKey: 'batimentid'});
 db.locauxvdis.hasMany(db.armoiresreseaux, {foreignKey: 'localvdiid'});
 db.armoiresreseaux.hasMany(db.bandeauxreseaux, {foreignKey: 'armoireid'});
 db.armoiresreseaux.hasMany(db.pilesswitchs, {foreignKey: 'armoireid'});

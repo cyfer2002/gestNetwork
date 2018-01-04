@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.CHAR(2),
       allowNull: false
     },
-    numerobandeau: {
-      type: DataTypes.CHAR(32),
+    nbbandeau: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     nbswitch: {

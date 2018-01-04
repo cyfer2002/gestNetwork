@@ -1,0 +1,43 @@
+extends layouts/application
+
+block content
+  .addbatiment
+    .container
+      .batiments-form
+        - if (user == null)
+          span.help-block Merci de vous authentifier
+        - else
+          -if (user.role != 'admin')
+            span.help-block Vous n'avez pas les droits d'accés, merci de voir avec l'administrateur du site
+          -else
+            form(action="/batiments/" method="post" accept-charset="UTF-8" novalidate="novalidate")
+              - if (success)
+                .alert.alert-success.message-sent
+                  button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                    | #{success}
+              - if (errors.error)
+                .alert.alert-danger.message-error
+                  button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                    | #{errors.error}
+              .form-group(class=(errors.nombatiment ? "has-danger" : ""))
+                input.form-control(type="text" name="nombatiment" placeholder="Nom du Bâtiment" autofocus="1" value=params.nombatiment)
+                - if (errors.nombatiment)
+                  span.help-block #{errors.nombatiment}
+              .form-group(class=(errors.etage ? "has-danger" : ""))
+                input.form-control(type="text" name="nbaile" placeholder="Nombre d'Ailes" autofocus="1" value=params.nbaile)
+                - if (errors.nbaile)
+                  span.help-block #{errors.nbaile}
+              .form-group(class=(errors.nbetageinf ? "has-danger" : ""))
+                input.form-control(type="text" name="nbetageinf" placeholder="Nombre d'étages en Sous sol (RdC non compris)" autofocus="1" value=params.nbetageinf)
+                - if (errors.nbetageinf)
+                  span.help-block #{errors.nbetageinf}
+              .form-group(class=(errors.nbetagesup ? "has-danger" : ""))
+                input.form-control(type="text" name="nbetagesup" placeholder="Nombre d'étages supérieur (RdC Compris)" autofocus="1" value=params.nbetagesup)
+                - if (errors.nbetagesup)
+                  span.help-block #{errors.nbetagesup}
+              button.btn.btn-primary(type="submit")
+                .fa.fa-spinner.fa-pulse
+                | Ajouter
+              .clearfix

@@ -22,18 +22,29 @@ html
           li.nav-item.d-none.d-md-block.d-lg-none
             a.nav-link(href="/") Accueil
           li.nav-item(class='find' === id ? "active" : "")
-            a.nav-link(href="/find") Find
+            a.nav-link(href="/find") Rechercher
           li.nav-item.dropdown(class='services' === id ? "active" : "")
             a(href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="menu-item-services")
               | Ajout d'éléments&nbsp;
               span.caret
             div.dropdown-menu(aria-labelledby="menu-item-services")
-              a.dropdown-item(href="#")
+              a.dropdown-item(href="/addBatiment") Ajouter un batiment
               a.dropdown-item(href="/addLocalVdi") Ajouter un local VDI
               a.dropdown-item(href="/addArmoireReseau") Ajouter Armoire Réseau
               .dropdown-divider
               a.dropdown-item(href="/addBandeau") Ajouter un bandeau Réseau
               a.dropdown-item(href="/addPileSwitch") Ajouter une pile de Switch
+          li.nav-item.dropdown(class='listes' === id ? "active" : "")
+            a(href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="menu-item-listes")
+              | Listes des éléments&nbsp;
+              span.caret
+            div.dropdown-menu(aria-labelledby="menu-item-listes")
+              a.dropdown-item(href="/listBatiment") Liste des batiments
+              a.dropdown-item(href="/listLocalVdi") Liste des locaux VDI
+              a.dropdown-item(href="/listArmoireReseau") Liste des Armoires Réseaux
+              .dropdown-divider
+              a.dropdown-item(href="/listBandeau") Liste des bandeaux Réseaux
+              a.dropdown-item(href="/listPileSwitch") Liste des piles de Switch
           li.nav-item(class='contact' === id ? "active" : "")
             a.nav-link(href="/contact") Contact
         ul.nav.navbar-nav.navbar-right

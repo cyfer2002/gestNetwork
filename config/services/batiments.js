@@ -6,13 +6,13 @@ var bcrypt = require('bcrypt-nodejs');
 var db = require('../db-config');
 
 /*Import Fonction JS.es6 CheckForm*/
-var checkLocauxVdisForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/locauxVdis/check_form.es6'), {
+var checkBatimentsForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/batiments/check_form.es6'), {
   presets: ['env']
 }).code);
 
 
 router.post('/', function(req, res, next) {
-  var errors = checkLocauxVdisForm(req.body);
+  var errors = checkBatimentsForm(req.body);
 
   // Vérification que l'utilisateur est loggé et a le droit d'ajouter un rôle, ainsi que le contenu n'ait pas été modifié durant le POST
   if (req.user) {
@@ -29,13 +29,11 @@ router.post('/', function(req, res, next) {
   }
   errors = {};
 
-
-  db.locauxvdis.create({
-    batiment: req.body.batiment,
-    etage: req.body.etage,
-    aile: req.body.aile,
-    nbarmoire: "",
-    description: req.body.description,
+  db.batiments.create({
+    nombatiment: req.body.nombatiment,
+    nbaile: req.body.nbaile,
+    nbetageinf: req.body.nbetageinf,
+    nbetagesup: req.body.nbetagesup,
     created_at: new Date()
   }).then(function(result) {
     console.log(result);
@@ -57,15 +55,14 @@ router.get('/', function(req, res, next) {
   if (Object.keys(error).length) {
     req.session.params = req.body;
     req.session.errors = { error: 'Veuillez activer Javascript.' };
-    return res.redirect('/locauxVdis/');
+    return res.redirect('/');
   }
   error = {};
 
-  db.locauxvdis.findAll({
+  db.batiments.findAll({
     order:[
-      ['batiment', 'DESC'],
-      ['etage', 'DESC'],
-      ['aile', 'DESC']
+      ['nombatiment', 'DESC'],
+      ['nbetage', 'DESC']
     ]}).then(news =>{
     if (req.xhr) {
       return res.send({

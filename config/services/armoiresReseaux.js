@@ -6,13 +6,13 @@ var bcrypt = require('bcrypt-nodejs');
 var db = require('../db-config');
 
 /*Import Fonction JS.es6 CheckForm*/
-var checkLocauxVdisForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/locauxVdis/check_form.es6'), {
+var checkArmoiresReseauxForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/armoiresReseaux/check_form.es6'), {
   presets: ['env']
 }).code);
 
 
 router.post('/', function(req, res, next) {
-  var errors = checkLocauxVdisForm(req.body);
+  var errors = checkArmoiresReseauxForm(req.body);
 
   // Vérification que l'utilisateur est loggé et a le droit d'ajouter un rôle, ainsi que le contenu n'ait pas été modifié durant le POST
   if (req.user) {
@@ -30,17 +30,16 @@ router.post('/', function(req, res, next) {
   errors = {};
 
 
-  db.locauxvdis.create({
-    batiment: req.body.batiment,
-    etage: req.body.etage,
-    aile: req.body.aile,
-    nbarmoire: "",
-    description: req.body.description,
+  db.armoiresReseaux.create({
+    localvdiid: req.body.localvdiid,
+    numeroarmoire: req.body.numeroarmoire,
+    numerobandeau: req.body.numerobandeau,
+    nbswitch: req.body.nbswitch,
     created_at: new Date()
   }).then(function(result) {
     console.log(result);
     res.send({
-      message: "le local VDI a été créé"
+      message: "L'armoire Reseau a été créé"
     });
   }).catch(function (err) {
     // handle error;
@@ -61,9 +60,9 @@ router.get('/', function(req, res, next) {
   }
   error = {};
 
-  db.locauxvdis.findAll({
+  db.armoiresReseaux.findAll({
     order:[
-      ['batiment', 'DESC'],
+      ['numeroarmoire', 'DESC'],
       ['etage', 'DESC'],
       ['aile', 'DESC']
     ]}).then(news =>{
@@ -82,4 +81,31 @@ router.get('/', function(req, res, next) {
   });
 });
 
+
+// Get operation
+router.get('/:id', function(req, res, next) {
+  var error = {};
+  if (Object.keys(error).length) {
+    req.session.params = req.body;
+    req.session.errors = { error: 'Veuillez activer Javascript.' };
+    return res.redirect('/locauxVdis/');
+  }
+  error = {};
+
+  db.armoiresReseaux.findById(id)
+    .then(armoire =>{
+    if (req.xhr) {
+      return res.send({
+        message: armoire,
+        user: req.user
+      });
+    }
+  }).catch(function (err) {
+    // handle error;
+    console.log(err);
+    res.send({
+      error: err.message
+    })
+  });
+});
 module.exports = router;

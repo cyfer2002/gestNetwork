@@ -6,13 +6,13 @@ var bcrypt = require('bcrypt-nodejs');
 var db = require('../db-config');
 
 /*Import Fonction JS.es6 CheckForm*/
-var checkLocauxVdisForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/locauxVdis/check_form.es6'), {
+var checkPortsReseauxForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/portsReseaux/check_form.es6'), {
   presets: ['env']
 }).code);
 
 
 router.post('/', function(req, res, next) {
-  var errors = checkLocauxVdisForm(req.body);
+  var errors = checkPortsReseauxForm(req.body);
 
   // Vérification que l'utilisateur est loggé et a le droit d'ajouter un rôle, ainsi que le contenu n'ait pas été modifié durant le POST
   if (req.user) {

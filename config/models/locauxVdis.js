@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       allowNull: false
     },
-    batiment: {
-      type: DataTypes.STRING(255),
+    batimentid: {
+      type: DataTypes.UUID,
       allowNull: false
     },
     etage: {

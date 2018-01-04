@@ -1,22 +1,26 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const BandeauxReseaux = sequelize.define('bandeauxreseaus', {
-    bandeauid: {
+  const Batiments = sequelize.define('batiments', {
+    batimentid: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false
     },
-    armoireid: {
-      type: DataTypes.UUID,
+    nombatiment: {
+      type: DataTypes.STRING(255),
       allowNull: false
     },
-    numerobandeau: {
-      type: DataTypes.CHAR(32),
+    nbaile: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
-    nbprises: {
+    nbetageinf: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    nbetagesup: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -29,5 +33,5 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     underscored: true
   });
-  return BandeauxReseaux;
+  return Batiments;
 };

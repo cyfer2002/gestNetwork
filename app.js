@@ -18,8 +18,21 @@ var passport  = require('passport');
 var db = require('./config/db-config');
 
 var routes = require('./config/routes');
+var armoiresReseaux = require('./config/services/armoiresReseaux');
+var batiments = require('./config/services/batiments');
+var bandeauxReseaux = require('./config/services/bandeauxReseaux');
+var locauxVdis = require('./config/services/locauxVdis');
 
 var app = express();
+
+
+// Sessions
+app.use(session({
+  cookieName: 'session',
+  secret: 'skadkshdjhaskjdhueopqoeqpeqmncjxuch',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -72,13 +85,6 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-// Sessions
-app.use(session({
-  cookieName: 'session',
-  secret: 'skadkshdjhaskjdhueopqoeqpeqmncjxuch',
-  duration: 30 * 60 * 1000,
-  activeDuration: 5 * 60 * 1000
-}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -88,7 +94,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// routes
 app.use('/', routes);
+app.use('/armoiresReseaux', armoiresReseaux);
+app.use('/bandeauxReseaux', bandeauxReseaux);
+app.use('/batiments', batiments);
+app.use('/locauxVdis', locauxVdis);
+
+
+// Bundles
 app.use('/', express.static(__dirname + '/static'));
 app.use('/images', express.static(__dirname + '/frontend/images'));
 app.use('/fonts', express.static(__dirname + '/frontend/fonts'));

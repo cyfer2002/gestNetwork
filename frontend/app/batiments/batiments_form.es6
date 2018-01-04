@@ -1,15 +1,15 @@
+
 import checkForm from './check_form';
 import Flash from '../lib/flash';
-import ReplaceFlash from '../lib/ReplaceFlash';
 
-const ERROR_CLASS = 'has-error';
+const ERROR_CLASS = 'has-danger';
 
-export default class GamersForm {
+export default class BatimentsForm {
   constructor(form) {
     this.$form = $(form);
     if (!this.$form.length) return;
 
-    this.$inputs = 'name lastname email birthday'.split(' ').reduce((h, inputName) => {
+    this.$inputs = 'nombatiment nbetageinf nbetagesup nbaile'.split(' ').reduce((h, inputName) => {
       h[inputName] = this.$form.find(`[name="${inputName}"]`);
       return h;
     }, {});
@@ -29,7 +29,8 @@ export default class GamersForm {
   resetErrors() {
     this.$form
       .find('.form-group').removeClass(ERROR_CLASS).end()
-      .find('.help-block').remove();
+      .find('.form-control').removeClass('is-invalid').end()
+      .find('.text-danger').remove();
   }
 
   onSubmit(e) {
@@ -49,31 +50,25 @@ export default class GamersForm {
         this.displayInputError(inputName, errors[inputName]);
       }
       // Give focus to the first input with an error
-      return this.$form.find('.has-error:first').find('input,select,textarea').focus();
+      return this.$form.find('.has-danger:first').find('input,select,textarea').focus();
     }
 
     // Display spinner
     var $button = this.$form.find('[type="submit"]').prop('disabled', true);
-
-
+    
     // Ajax call
     $.ajax({
-      url: this.$form.attr('action'),
-      method: this.$form.attr('method'),
-      data: this.$form.serialize(),
+      url:      this.$form.attr('action'),
+      method:   this.$form.attr('method'),
+      data:     this.$form.serialize(),
       dataType: 'JSON',
       success: (data) => {
         if (data.error) {
           Flash.danger(data.error, this.$form);
         }
         if (data.message) {
-          $button.prop('disabled', false);
           Flash.success(data.message, this.$form);
           this.$form[0].reset();
-          LogInUser._display(data.user.username, $('[data-target="#login"]'));
-          setTimeout(function () {
-            $('.modal').modal('hide');
-          }, 500);
         }
       },
       complete: () => {
@@ -85,6 +80,7 @@ export default class GamersForm {
   displayInputError(inputName, error) {
     this.$inputs[inputName]
       .closest('.form-group').addClass(ERROR_CLASS).end()       // Add class on form-group element
-      .after($('<span>', {class: 'help-block'}).text(error)); // Add an help-block element with the error desc
+      .closest('.form-control').addClass('is-invalid').end()
+      .after($('<small>', { class: 'text-danger' }).text(error)); // Add an help-block element with the error desc
   }
 }

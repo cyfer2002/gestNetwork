@@ -1,0 +1,49 @@
+extends layouts/application
+
+block content
+  .addvdi
+    .container
+      .vdis-form
+        - if (user == null)
+          span.help-block Merci de vous authentifier
+        - else
+          -if (user.role != 'admin')
+            span.help-block Vous n'avez pas les droits d'accés, merci de voir avec l'administrateur du site
+          -else
+            form(action="/locauxVdis/" method="post" accept-charset="UTF-8" novalidate="novalidate")
+              - if (success)
+                .alert.alert-success.message-sent
+                  button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                    | #{success}
+              - if (errors.error)
+                .alert.alert-danger.message-error
+                  button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                    span(aria-hidden="true") &times;
+                    | #{errors.error}
+              .form-group(class=(errors.batiment ? "has-danger" : ""))
+                input.form-control(type="text" name="batiment" placeholder="Bâtiment" autofocus="1" value=params.batiment)
+                - if (errors.batiment)
+                  span.help-block #{errors.batiment}
+              .form-group(class=(errors.etage ? "has-danger" : ""))
+                input.form-control(type="text" name="etage" placeholder="Etage" autofocus="1" value=params.etage)
+                - if (errors.etage)
+                  span.help-block #{errors.etage}
+              .form-group(class=(errors.aile ? "has-danger" : ""))
+                input.form-control(type="text" name="aile" placeholder="Aile" autofocus="1" value=params.aile)
+                - if (errors.aile)
+                  span.help-block #{errors.aile}
+              .form-group(class=(errors.nbarmoire ? "has-danger" : ""))
+                input.form-control(type="text" name="nbarmoire" placeholder="Nombre d'armoires" value=params.nbarmoire)
+                - if (errors.nbarmoire)
+                  span.help-block #{errors.nbarmoire}
+              .form-group(class=(errors.description ? "has-danger" : ""))
+                label(for="description") Description&nbsp;
+                textarea.form-control(name="description" id="description" rows="4")
+                  | #{params.description}
+                - if (errors.description)
+                  span.help-block #{errors.description}
+              button.btn.btn-primary(type="submit")
+                .fa.fa-spinner.fa-pulse
+                | Ajouter
+              .clearfix
