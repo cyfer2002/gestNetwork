@@ -13,6 +13,7 @@ import './config/font-awesome.config.less';
 
 import './application.styl';
 
+import ArmoiresForm from './app/armoiresReseaux/armoires_form';
 import ContactForm from './app/contact/contact_form';
 import LoginForm from './app/login/login_form';
 import LocauxVdisForm from './app/locauxVdis/vdis_form';
@@ -20,6 +21,7 @@ import FindForm from './app/find/find_form';
 import BatimentsForm from './app/batiments/batiments_form';
 
 $(() => {
+  new ArmoiresForm($('.armoires-form form'));
   new ContactForm($('.contact-form form'));
   new LoginForm($('.login-form form'));
   new LocauxVdisForm($('.vdis-form form'));

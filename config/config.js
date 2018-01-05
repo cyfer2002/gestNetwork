@@ -25,4 +25,17 @@ config.db = {
   }
 };
 
+config.batiment = {
+  etageSupMax: 9,
+  etageInfMax: 3,
+  aileMax: 4
+};
+
+config.aile = {
+  '1': 'Nord',
+  '2': 'Sud',
+  '3': 'Est',
+  '4': 'Ouest'
+}
+
 module.exports = config;

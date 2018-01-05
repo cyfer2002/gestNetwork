@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataTypes) => {
-  const AmoiresReseaux = sequelize.define('amoiresreseaus', {
+  const AmoiresReseaux = sequelize.define('armoiresreseaus', {
     armoireid: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     nbbandeau: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     nbswitch: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,

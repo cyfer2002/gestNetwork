@@ -6,7 +6,7 @@ var config = require('../../../config/config');
 
 const ERROR_CLASS = 'has-danger';
 
-export default class LocauxVdisForm {
+export default class ArmoiresForm {
   constructor(form) {
     this.$form = $(form);
     this.$batiment = {};
@@ -21,6 +21,8 @@ export default class LocauxVdisForm {
     this.$form.on('submit', (e) => this.onSubmit(e));
 
     this.$form.find('select[name="batimentid"]').on('change', (e) => this.onChangeBatiment(e));
+    this.$form.find('select[name="etage"]').on('change', (e) => this.onChangeEtage(e));
+    this.$form.find('select[name="aile"]').on('change', (e) => this.onChangeEtage(e));
 
     this.onLoad();
   }
@@ -119,6 +121,44 @@ export default class LocauxVdisForm {
         }
       }
     });
+  }
+
+  onChangeEtage(e){
+
+  }
+
+  selectionArmoire(e) {
+    // Stop submit event
+    e.preventDefault();
+
+    // Remove errors from previous submit call
+    this.resetErrors();
+
+    var $etage = this.$form.find('select[name="etage"]');
+    var $aile = this.$form.find('select[name="aile"]');
+
+    $etage.prop('disabled', true);
+    $aile.prop('disabled', true);
+    $etage.children('option:not(:first)').remove();
+    $aile.children('option:not(:first)').remove();
+
+    if (this.$form.find('select[name="batimentid"]').val()) {
+      $etage.prop('disabled', false);
+      $aile.prop('disabled', false);
+      for (var batiment in this.$batiment) {
+        if (this.$batiment[batiment].batimentid == this.$form.find('select[name="batimentid"]').val()) {
+          for (var etage = this.$batiment[batiment].nbetageinf; etage > 0; --etage) {
+            $etage.append(new Option(-etage, -etage, false, false));
+          }
+          for (var etage = 0; etage < this.$batiment[batiment].nbetagesup + 1; ++etage) {
+            $etage.append(new Option(etage, etage, false, false));
+          }
+          for (var aile = 1; aile < this.$batiment[batiment].nbaile + 1; ++aile) {
+            $aile.append(new Option(config.aile[aile], aile, false, false));
+          }
+        }
+      }
+    }
   }
 
   onChangeBatiment(e) {

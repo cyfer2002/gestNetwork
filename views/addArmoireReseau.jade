@@ -1,9 +1,9 @@
 extends layouts/application
 
 block content
-  .addvdi
+  .addarmoires
     .container
-      .vdis-form
+      .armoires-form
         - if (user == null)
           span.help-block Merci de vous authentifier
         - else
@@ -11,9 +11,9 @@ block content
             span.help-block Vous n'avez pas les droits d'accés, merci de voir avec l'administrateur du site
           -else
             .bg
-            h2 Ajout d'un local VDI
+            h2 Ajout d'une Armoire Réseau
             address
-              strong Entrer les informations concernant ce local
+              strong Entrer les informations concernant l'armoire réseau
               p Merci d'ajouter une description pour plus de compréhension.
             form(action="/locauxVdis/" method="post" accept-charset="UTF-8" novalidate="novalidate")
               - if (success)
@@ -26,28 +26,29 @@ block content
                   button(type="button" class="close" data-dismiss="alert" aria-label="Close")
                     span(aria-hidden="true") &times;
                     | #{errors.error}
-              .form-group(class=(errors.nbaile ? "has-danger" : ""))
+              .form-group(class=(errors.batimentid ? "has-danger" : ""))
                 select.form-control(name="batimentid" disabled=true)
                   option(value="") Selectionner un batiment
-                - if (errors.batiment)
-                  span.help-block #{errors.batiment}
+                - if (errors.batimentid)
+                  span.help-block #{errors.batimentid}
               .row
                 .col-5
                   .form-group(class=(errors.etage ? "has-danger" : ""))
-                    select.form-control(name="etage" placeholder="Etage" value=params.etage disabled=true)
+                    select.form-control(name="etage" value=params.etage disabled=true)
                       option(value="") Selectionner un Etage
                     - if (errors.etage)
                       span.help-block #{errors.etage}
                 .offset-2.col-5
                   .form-group(class=(errors.aile ? "has-danger" : ""))
-                    select.form-control(name="aile" placeholder="Aile" value=params.aile disabled=true)
+                    select.form-control(name="aile" value=params.aile disabled=true)
                       option(value="") Selectionner une Aile
                     - if (errors.aile)
                       span.help-block #{errors.aile}
-              .form-group(class=(errors.nbarmoire ? "has-danger" : ""))
-                input.form-control(type="number" name="nbarmoire" placeholder="Nombre d'armoires" value=params.nbarmoire)
-                - if (errors.nbarmoire)
-                  span.help-block #{errors.nbarmoire}
+              .form-group(class=(errors.aile ? "has-danger" : ""))
+                select.form-control(name="armoireid" value=params.armoireid disabled=true)
+                  option(value="") Selectionner une Armoire
+                - if (errors.armoireid)
+                  span.help-block #{errors.armoireid}
               .form-group(class=(errors.description ? "has-danger" : ""))
                 label(for="description") Description&nbsp;
                 textarea.form-control(name="description" id="description" rows="4")

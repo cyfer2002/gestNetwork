@@ -31,6 +31,7 @@ router.post('/', function(req, res, next) {
 
   db.batiments.create({
     nombatiment: req.body.nombatiment,
+    caractbatiment: req.body.caractbatiment,
     nbaile: req.body.nbaile,
     nbetageinf: req.body.nbetageinf,
     nbetagesup: req.body.nbetagesup,
@@ -38,7 +39,7 @@ router.post('/', function(req, res, next) {
   }).then(function(result) {
     console.log(result);
     res.send({
-      message: "le local VDI a été créé"
+      message: "le Batiment " + result.nombatiment + " a été créé"
     });
   }).catch(function (err) {
     // handle error;
@@ -61,12 +62,11 @@ router.get('/', function(req, res, next) {
 
   db.batiments.findAll({
     order:[
-      ['nombatiment', 'DESC'],
-      ['nbetage', 'DESC']
-    ]}).then(news =>{
+      ['nombatiment', 'DESC']
+    ]}).then(result =>{
     if (req.xhr) {
       return res.send({
-        message: news,
+        message: result,
         user: req.user
       });
     }

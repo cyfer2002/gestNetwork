@@ -31,14 +31,13 @@ router.post('/', function(req, res, next) {
 
 
   db.locauxvdis.create({
-    batiment: req.body.batiment,
+    batimentid: req.body.batimentid,
     etage: req.body.etage,
     aile: req.body.aile,
-    nbarmoire: "",
+    nbarmoire: req.body.nbarmoire,
     description: req.body.description,
     created_at: new Date()
   }).then(function(result) {
-    console.log(result);
     res.send({
       message: "le local VDI a été créé"
     });

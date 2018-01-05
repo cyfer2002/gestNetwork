@@ -9,7 +9,7 @@ export default class BatimentsForm {
     this.$form = $(form);
     if (!this.$form.length) return;
 
-    this.$inputs = 'nombatiment nbetageinf nbetagesup nbaile'.split(' ').reduce((h, inputName) => {
+    this.$inputs = 'nombatiment caractbatiment nbetageinf nbetagesup nbaile'.split(' ').reduce((h, inputName) => {
       h[inputName] = this.$form.find(`[name="${inputName}"]`);
       return h;
     }, {});

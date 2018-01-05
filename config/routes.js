@@ -88,6 +88,21 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.get('/addArmoireReseau', function (req, res, next) {
+  var success = req.session.success;
+  var errors = req.session.errors || {};
+  var params = req.session.params || {};
+  var user = req.user;
+  res.render('addarmoirereseau', {
+    title: config.title,
+    id: "services",
+    params: params,
+    success: success,
+    errors: errors,
+    user: user
+  });
+});
+
 router.get('/addLocalVdi', function (req, res, next) {
   var success = req.session.success;
   var errors = req.session.errors || { error: false };
@@ -112,6 +127,7 @@ router.get('/addBatiment', function (req, res, next) {
     title: config.title,
     id: "services",
     params: params,
+    batiment: config.batiment,
     success: success,
     errors: errors,
     user: user
@@ -132,6 +148,7 @@ router.get('/contact', function (req, res, next) {
     user: user
   });
 });
+
 
 router.get('/find', function (req, res, next) {
   var success = req.session.success;

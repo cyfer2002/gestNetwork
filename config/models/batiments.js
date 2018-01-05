@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    caractbatiment: {
+      type: DataTypes.CHAR,
+      allowNull: false
+    },
     nbaile: {
       type: DataTypes.INTEGER,
       allowNull: false
