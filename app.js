@@ -42,11 +42,11 @@ app.set('view engine', 'jade');
 app.use(passport.initialize());
 app.use(passport.session());
 
-/*
+
 // Generate a salt
 var salt = bcrypt.genSaltSync(10);
 // Hash the password with the salt
-var password = bcrypt.hashSync("admin", salt);
+var password = bcrypt.hashSync("thalassa", salt);
 
 db.users.create({
   username: "admin",
@@ -57,7 +57,7 @@ db.users.create({
   email: "nvatin@chu-besancon.fr",
   created_at: new Date()
 });
-*/
+
 
 passport.use(new LocalStrategy(function(username, password, done) {
   process.nextTick(function() {
