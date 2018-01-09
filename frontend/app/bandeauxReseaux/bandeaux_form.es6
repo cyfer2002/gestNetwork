@@ -1,19 +1,20 @@
 
 import checkForm from './check_form';
+
 import Flash from '../lib/flash';
 
 var config = require('../../../config/config');
 
 const ERROR_CLASS = 'has-danger';
 
-export default class ArmoiresForm {
+export default class BandeauxForm {
   constructor(form) {
     this.$form = $(form);
     this.$batiment = {};
     this.$vdis = {};
     if (!this.$form.length) return;
 
-    this.$inputs = 'batimentid etage aile nbarmoire description'.split(' ').reduce((h, inputName) => {
+    this.$inputs = 'batimentid etage aile nbarmoire description prise'.split(' ').reduce((h, inputName) => {
       h[inputName] = this.$form.find(`[name="${inputName}"]`);
       return h;
     }, {});
@@ -24,6 +25,8 @@ export default class ArmoiresForm {
     this.$form.find('select[name="batimentid"]').on('change', (e) => this.onChangeBatiment(e));
     this.$form.find('select[name="etage"]').on('change', (e) => this.onChangeEtage(e));
     this.$form.find('select[name="aile"]').on('change', (e) => this.onChangeEtage(e));
+
+    this.$form.find('input[name="prise"]').on('input', (e) => this.onInput(e));
 
     this.onLoad();
   }
@@ -41,6 +44,46 @@ export default class ArmoiresForm {
       .find('.form-group').removeClass(ERROR_CLASS).end()
       .find('.form-control').removeClass('is-invalid').end()
       .find('.text-danger').remove();
+  }
+
+  onInput(e){
+    // Stop submit event
+    e.preventDefault();
+
+    // Remove errors from previous submit call
+    this.resetErrors();
+    $('#list').children().remove();
+    var errors = checkForm(this.inputValues);
+
+ /*   // Error found
+    if (Object.keys(errors).length) {
+      // Display errors
+      for (var inputName in errors) {
+        this.displayInputError(inputName, errors[inputName]);
+      }
+      // Give focus to the first input with an error
+      return this.$form.find('.has-danger:first').find('input,select,textarea').focus();
+    }
+*/
+    // Ajax call
+    $.ajax({
+      url:      '/batiments/char/' + this.$form.find('input[name="prise"]').val(),
+      method:   'GET',
+      dataType: 'JSON',
+      success: (data) => {
+        if (data.error) {
+          Flash.danger(data.error, this.$form);
+        }
+        if (data.message) {
+          // Ce qu'il faut faire quand les données sont récupérées
+          this.$batiment = data.message;
+          for (var batiment in this.$batiment) {
+            $('#list').append(new Option(this.$batiment[batiment].nombatiment, this.$batiment[batiment].batimentid, false, false));
+          }
+        }
+      }
+    });
+
   }
 
   onSubmit(e) {

@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     etage: {
-      type: DataTypes.CHAR(1),
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     aile: {
-      type: DataTypes.CHAR(32),
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     nbarmoire: {

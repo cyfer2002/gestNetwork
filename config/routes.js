@@ -134,6 +134,22 @@ router.get('/addBatiment', function (req, res, next) {
   });
 });
 
+router.get('/addBandeau', function (req, res, next) {
+  var success = req.session.success;
+  var errors = req.session.errors || { error: false };
+  var params = req.session.params || {};
+  var user = req.user;
+  res.render('addBandeauReseau', {
+    title: config.title,
+    id: "services",
+    params: params,
+    batiment: config.batiment,
+    success: success,
+    errors: errors,
+    user: user
+  });
+});
+
 router.get('/contact', function (req, res, next) {
   var success = req.session.success;
   var errors = req.session.errors || {};

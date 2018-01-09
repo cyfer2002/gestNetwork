@@ -79,4 +79,36 @@ router.get('/', function(req, res, next) {
   });
 });
 
+// Get operation
+router.get('/char/:caractbatiment', function(req, res, next) {
+  var error = {};
+  if (Object.keys(error).length) {
+    req.session.params = req.body;
+    req.session.errors = { error: 'Veuillez activer Javascript.' };
+    return res.redirect('/');
+  }
+  error = {};
+
+  db.batiments.findAll({
+    where:{
+      caractbatiment: req.params.caractbatiment
+    },
+    order:[
+      ['nombatiment', 'DESC']
+    ]}).then(result =>{
+    if (req.xhr) {
+      return res.send({
+        message: result,
+        user: req.user
+      });
+    }
+  }).catch(function (err) {
+    // handle error;
+    console.log(err);
+    res.send({
+      error: err.message
+    })
+  });
+});
+
 module.exports = router;
