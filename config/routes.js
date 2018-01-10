@@ -123,7 +123,7 @@ router.get('/addBatiment', function (req, res, next) {
   var errors = req.session.errors || { error: false };
   var params = req.session.params || {};
   var user = req.user;
-  res.render('addBatiment', {
+  res.render('addbatiment', {
     title: config.title,
     id: "services",
     params: params,
@@ -139,7 +139,7 @@ router.get('/addBandeau', function (req, res, next) {
   var errors = req.session.errors || { error: false };
   var params = req.session.params || {};
   var user = req.user;
-  res.render('addBandeauReseau', {
+  res.render('addbandeaureseau', {
     title: config.title,
     id: "services",
     params: params,
