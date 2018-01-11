@@ -115,4 +115,38 @@ router.get('/:batimentid', function(req, res, next) {
   });
 });
 
+// Get operation
+router.get('/aile/:aile', function(req, res, next) {
+  var error = {};
+  if (Object.keys(error).length) {
+    req.session.params = req.body;
+    req.session.errors = { error: 'Veuillez activer Javascript.' };
+    return res.redirect('/locauxVdis/');
+  }
+  error = {};
+
+  db.locauxvdis.findAll({
+    where:{
+      aile: req.params.aile
+    },
+    order:[
+      ['localvdiid', 'DESC'],
+      ['etage', 'DESC'],
+      ['aile', 'DESC']
+    ]}).then(news =>{
+    if (req.xhr) {
+      return res.send({
+        message: news,
+        user: req.user
+      });
+    }
+  }).catch(function (err) {
+    // handle error;
+    console.log(err);
+    res.send({
+      error: err.message
+    })
+  });
+});
+
 module.exports = router;

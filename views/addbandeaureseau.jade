@@ -13,7 +13,7 @@ block content
             .bg
             h2 Ajout d'un Bandeau Réseau
             address
-              strong Taper la référence du bandeau
+              strong Taper la référence de l'armoire
             form(action="/locauxVdis/" method="post" accept-charset="UTF-8" novalidate="novalidate")
               - if (success)
                 .alert.alert-success.message-sent
@@ -26,8 +26,7 @@ block content
                     span(aria-hidden="true") &times;
                     | #{errors.error}
               .form-group(class=(errors.prise ? "has-danger" : ""))
-                input.form-control(type="text" name="prise" list="list" placeholder="XXX-XX-XX[-XX]" autofocus="1" value=params.prise datalist)
-                #list.datalist
+                input.form-control(type="text" name="prise" id="optionList" placeholder="XXX-XX-XX[-XX]" autofocus="1" value=params.prise)
                 - if (errors.prise)
                   span.help-block #{errors.prise}
               address

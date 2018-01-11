@@ -1,5 +1,6 @@
 
 import checkForm from './check_form';
+import Utilities from '../lib/utilities'
 
 import Flash from '../lib/flash';
 
@@ -52,38 +53,65 @@ export default class BandeauxForm {
 
     // Remove errors from previous submit call
     this.resetErrors();
-    $('#list').children().remove();
+    //$('#list').children().remove();
     var errors = checkForm(this.inputValues);
 
- /*   // Error found
+    var $select = this.$form.find('select[name="batimentid"]');
+    var $etage = this.$form.find('select[name="etage"]');
+    var $aile = this.$form.find('select[name="aile"]');
+
+    // Error found
     if (Object.keys(errors).length) {
       // Display errors
       for (var inputName in errors) {
         this.displayInputError(inputName, errors[inputName]);
       }
       // Give focus to the first input with an error
-      return this.$form.find('.has-danger:first').find('input,select,textarea').focus();
+      this.$form.find('.has-danger:first').find('input,select,textarea').focus();
     }
-*/
-    // Ajax call
-    $.ajax({
-      url:      '/batiments/char/' + this.$form.find('input[name="prise"]').val(),
-      method:   'GET',
-      dataType: 'JSON',
-      success: (data) => {
-        if (data.error) {
-          Flash.danger(data.error, this.$form);
-        }
-        if (data.message) {
-          // Ce qu'il faut faire quand les données sont récupérées
-          this.$batiment = data.message;
-          for (var batiment in this.$batiment) {
-            $('#list').append(new Option(this.$batiment[batiment].nombatiment, this.$batiment[batiment].batimentid, false, false));
-          }
-        }
-      }
-    });
 
+    if ((this.$form.find('input[name="prise"]').val().length > 0) && ((this.$form.find('input[name="prise"]').val().length < 2))) {
+      $etage.prop('disabled', true);
+      $aile.prop('disabled', true);
+      $etage.children('option:not(:first)').remove();
+      $aile.children('option:not(:first)').remove();
+      $select.children('option:not(:first)').remove();
+      $select.prop('disabled', false);
+
+      // Ajax call
+      $.ajax({
+        url: '/batiments/char/' + (this.$form.find('input[name="prise"]').val()).substring(0, 1),
+        method: 'GET',
+        data: this.$form.serialize(),
+        dataType: 'JSON',
+        success: (data) => {
+          if (data.error) {
+            Flash.danger(data.error, this.$form);
+          }
+          if (data.message) {
+            $select.append(new Option(data.message[0].nombatiment, data.message[0].batimentid, false, true));
+          }
+        },
+        complete: () => {
+          $button.prop('disabled', false);
+        }
+      });
+    } else if (this.$form.find('input[name="prise"]').val().length > 1) {
+        var etage, aile;
+        var expr = /^[a-z]$/i ;
+        if (expr.test((this.$form.find('input[name="prise"]').val()).substring(1,2))){
+          etage = - Utilities.convertirLettreChiffreEtage((this.$form.find('input[name="prise"]').val()).substring(1,2));
+        } else etage =(this.$form.find('input[name="prise"]').val()).substring(1,2);
+        // Ajax call
+        if (expr.test((this.$form.find('input[name="prise"]').val()).substring(2,3))){
+          alert(utilities.convertirLettreChiffreAile((this.$form.find('input[name="prise"]').val()).substring(2,3)));
+        } else aile =(this.$form.find('input[name="prise"]').val()).substring(2,3);
+        $etage.append(new Option(etage, etage, false, true));
+        $aile.append(new Option(config.aile[aile], config.aile[aile], false, true));
+      } else {
+      this.onLoad();
+      this.$form.find('input[name="prise"]').focus();
+    }
   }
 
   onSubmit(e) {
@@ -134,6 +162,49 @@ export default class BandeauxForm {
   onLoad() {
     // Remove errors from previous submit call
     this.resetErrors();
+
+    $.ajax({
+      url:      '/createJson',
+      method:   'GET',
+      data:     this.$form.serialize(),
+      dataType: 'JSON',
+      success: (data) => {
+        if (data.error) {
+          Flash.danger(data.error, this.$form);
+        }
+        if (data.message) {
+          Flash.success(data.message, this.$form);
+          this.$form[0].reset();
+        }
+      },
+      complete: () => {
+        $button.prop('disabled', false);
+      }
+    });
+
+    var options = {
+
+      url: "/createJson",
+
+      categories: [{
+        listLocation: "refPrise",
+        maxNumberOfElements: 8
+      }],
+
+      getValue: function(element) {
+        return element.name;
+      },
+
+      list: {
+        match: {
+          enabled: true
+        }
+      },
+
+      theme: "square"
+    };
+
+    $('#optionList').easyAutocomplete(options);
 
     // Stop submit event
     var $select = this.$form.find('select[name="batimentid"]');

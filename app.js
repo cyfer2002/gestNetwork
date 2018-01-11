@@ -106,6 +106,7 @@ app.use('/locauxVdis', locauxVdis);
 app.use('/', express.static(__dirname + '/static'));
 app.use('/images', express.static(__dirname + '/frontend/images'));
 app.use('/fonts', express.static(__dirname + '/frontend/fonts'));
+app.use('/json', express.static(__dirname + '/frontend/json'));
 
 
 

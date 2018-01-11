@@ -1,10 +1,12 @@
 var express    = require('express');
 var router     = express.Router();
 var config     = require('./config');
-var passport  = require('passport');
+var passport   = require('passport');
 var babel      = require('babel-core');
 var nodemailer = require('nodemailer');
 var path       = require('path');
+var fs         = require('fs');
+var db         = require('./db-config');
 
 // Passport initialize
 router.use(passport.initialize());
@@ -14,6 +16,11 @@ router.use(passport.session());
 var checkContactForm = eval(babel.transformFileSync(path.join(__dirname, '../frontend/app/contact/check_form.es6'), {
   presets: ['env']
 }).code);
+
+var utilities = eval(babel.transformFileSync(path.join(__dirname, '../frontend/app/lib/utilities.es6'), {
+  presets: ['env']
+}).code);
+
 var checkFindForm = eval(babel.transformFileSync(path.join(__dirname, '../frontend/app/find/check_form.es6'), {
   presets: ['env']
 }).code);
@@ -165,6 +172,55 @@ router.get('/contact', function (req, res, next) {
   });
 });
 
+router.get('/createJson', function (req, res, next) {
+
+
+  var refPrise = [];
+  var prise = {};
+
+  db.batiments.findAll({
+    include: [{
+      model: db.locauxvdis,
+      include: [
+        {
+          model: db.armoiresreseaux,
+          include: [{
+            model: db.bandeauxreseaux
+          }]
+        }
+      ]
+    }],
+    order:[
+      ['nombatiment', 'DESC']
+    ]}).then(batiments =>{
+      var i = 0;
+      for (batiment in batiments){
+        for (local in batiments[batiment].locauxvdis){
+          for (var armoire=1; armoire < batiments[batiment].locauxvdis[local].nbarmoire; ++armoire){
+            var charEtage;
+            if (batiments[batiment].locauxvdis[local].etage < 0){
+              charEtage = utilities.convertirChiffreLettreEtage(batiments[batiment].locauxvdis[local].etage)
+            } else charEtage = batiments[batiment].locauxvdis[local].etage;
+            prise.name = batiments[batiment].caractbatiment + charEtage
+              + utilities.caractereAile(batiments[batiment].caractbatiment, batiments[batiment].locauxvdis[local].aile) + '-' + armoire;
+            refPrise[i] = prise;
+            prise = {};
+            ++i;
+          }
+        }
+      }
+    res.json({
+      refPrise
+    });
+  }).catch(function (err) {
+    // handle error;
+    console.log(err);
+    res.send({
+      error: err.message
+    })
+  });
+
+});
 
 router.get('/find', function (req, res, next) {
   var success = req.session.success;

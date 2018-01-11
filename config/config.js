@@ -35,7 +35,8 @@ config.aile = {
   '1': 'Nord',
   '2': 'Sud',
   '3': 'Est',
-  '4': 'Ouest'
+  '4': 'Ouest',
+  '5': 'Central'
 }
 
 module.exports = config;

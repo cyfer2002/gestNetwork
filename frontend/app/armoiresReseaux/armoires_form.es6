@@ -254,7 +254,4 @@ export default class ArmoiresForm {
       .after($('<small>', { class: 'text-danger' }).text(error)); // Add an help-block element with the error desc
   }
 
-  convertirChiffreLettreEtage (chiffre) {
-    return String.fromCharCode(chiffre+64);
-  }
 }

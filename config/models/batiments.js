@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     caractbatiment: {
-      type: DataTypes.CHAR,
+      type: DataTypes.CHAR(1),
       allowNull: false
     },
     nbaile: {
