@@ -25,37 +25,45 @@ block content
                   button(type="button" class="close" data-dismiss="alert" aria-label="Close")
                     span(aria-hidden="true") &times;
                     | #{errors.error}
-              .form-group(class=(errors.prise ? "has-danger" : ""))
-                input.form-control(type="text" name="prise" id="optionList" placeholder="XXX-XX-XX[-XX]" autofocus="1" value=params.prise)
-                - if (errors.prise)
-                  span.help-block #{errors.prise}
-              address
-                strong Ou Entrer les informations le concernant
-                p Merci d'ajouter une description pour plus de compréhension.
-              .form-group(class=(errors.batimentid ? "has-danger" : ""))
-                select.form-control(name="batimentid" disabled=true)
-                  option(value="") Selectionner un batiment
-                - if (errors.batimentid)
-                  span.help-block #{errors.batimentid}
-              .row
-                .col-5
-                  .form-group(class=(errors.etage ? "has-danger" : ""))
-                    select.form-control(name="etage" value=params.etage disabled=true)
-                      option(value="") Selectionner un Etage
-                    - if (errors.etage)
-                      span.help-block #{errors.etage}
-                .offset-2.col-5
-                  .form-group(class=(errors.aile ? "has-danger" : ""))
-                    select.form-control(name="aile" value=params.aile disabled=true)
-                      option(value="") Selectionner une Aile
-                    - if (errors.aile)
-                      span.help-block #{errors.aile}
-              .form-group(class=(errors.aile ? "has-danger" : ""))
-                select.form-control(name="armoireid" value=params.armoireid disabled=true)
-                  option(value="") Selectionner une Armoire
-                - if (errors.armoireid)
-                  span.help-block #{errors.armoireid}
-              button.btn.btn-primary(type="submit")
-                .fa.fa-spinner.fa-pulse
-                | Ajouter
-              .clearfix
+              firstPart
+                .form-group(class=(errors.prise ? "has-danger" : ""))
+                  input.form-control(type="text" name="prise" id="optionList" placeholder="XXX-XX-XX[-XX]" autofocus="1" value=params.prise)
+                  - if (errors.prise)
+                    span.help-block #{errors.prise}
+                address
+                  strong Ou Entrer les informations le concernant
+                  p Merci d'ajouter une description pour plus de compréhension.
+                .form-group(class=(errors.batimentid ? "has-danger" : ""))
+                  select.form-control(name="batimentid" disabled=true)
+                    option(value="") Selectionner un batiment
+                  - if (errors.batimentid)
+                    span.help-block #{errors.batimentid}
+                .row
+                  .col-5
+                    .form-group(class=(errors.etage ? "has-danger" : ""))
+                      select.form-control(name="etage" value=params.etage disabled=true)
+                        option(value="") Selectionner un Etage
+                      - if (errors.etage)
+                        span.help-block #{errors.etage}
+                  .offset-2.col-5
+                    .form-group(class=(errors.aile ? "has-danger" : ""))
+                      select.form-control(name="aile" value=params.aile disabled=true)
+                        option(value="") Selectionner une Aile
+                      - if (errors.aile)
+                        span.help-block #{errors.aile}
+                .form-group(class=(errors.aile ? "has-danger" : ""))
+                  select.form-control(name="armoireid" value=params.armoireid disabled=true)
+                    option(value="") Selectionner une Armoire
+                  - if (errors.armoireid)
+                    span.help-block #{errors.armoireid}
+                button.btn.btn-primary(type="button" disabled)
+                  .fa
+                  | Suivant
+                .clearfix
+              secondPart(style = "display:none")
+                address
+                  strong Nombre de bandeau à ajouter
+                .form-group(class=(errors.nbbandeau ? "has-danger" : ""))
+                  input.form-control(type="number" name="nbbandeau" autofocus="1" value=(params.nbbandeau ? "" : "1"))
+                  - if (errors.nbbandeau)
+                    span.help-block #{errors.nbbandeau}

@@ -19,13 +19,16 @@ export default class BandeauxForm {
       h[inputName] = this.$form.find(`[name="${inputName}"]`);
       return h;
     }, {});
-
+    $('secondPart').hide();
     this.$form.find('.message-sent, .message-error').delay(5000).fadeOut(400);
     this.$form.on('submit', (e) => this.onSubmit(e));
 
     this.$form.find('select[name="batimentid"]').on('change', (e) => this.onChangeBatiment(e));
     this.$form.find('select[name="etage"]').on('change', (e) => this.onChangeEtage(e));
     this.$form.find('select[name="aile"]').on('change', (e) => this.onChangeEtage(e));
+    this.$form.find('select[name="armoireid"]').on('change', (e) => this.onChangeArmoire(e));
+
+    this.$form.find('button[type="button"]').on('click', (e) => this.onClickButton(e));
 
     this.$form.find('input[name="prise"]').on('input', (e) => this.onInput(e));
 
@@ -53,6 +56,10 @@ export default class BandeauxForm {
 
     // Remove errors from previous submit call
     this.resetErrors();
+
+    // Display spinner
+    var $button = this.$form.find('[type="button"]').prop('disabled', true);
+
     //$('#list').children().remove();
     var errors = checkForm(this.inputValues);
 
@@ -119,9 +126,11 @@ export default class BandeauxForm {
         } else {
           if (expr.test((this.$form.find('input[name="prise"]').val()).substring(4,5))){
             armoire = Utilities.convertirLettreChiffreEtage((this.$form.find('input[name="prise"]').val()).substring(4,5));
-          } else armoire =(this.$form.find('input[name="prise"]').val()).substring(4,5);
+          } else {
+            armoire =(this.$form.find('input[name="prise"]').val()).substring(4,5);
+          }
         }
-
+        if (armoire) $button.prop('disabled', false);
         $armoire.append(new Option(armoire, armoire, false, true));
         $etage.append(new Option(etage, etage, false, true));
         $aile.append(new Option(config.aile[aile], config.aile[aile], false, true));
@@ -180,6 +189,7 @@ export default class BandeauxForm {
   onLoad() {
     // Remove errors from previous submit call
     this.resetErrors();
+
 
     $.ajax({
       url:      '/createJson',
@@ -268,12 +278,38 @@ export default class BandeauxForm {
     }
   }
 
+  onClickButton(e){
+    // Stop submit event
+    e.preventDefault();
+
+    $('firstPart').fadeOut(400);
+    $('secondPart').delay(500).fadeIn(1000);
+
+  }
+
+  onChangeArmoire(e){
+    // Stop submit event
+    e.preventDefault();
+
+    var $armoire = this.$form.find('select[name="armoireid"]');
+    var $button = this.$form.find('[type="button"]');
+    $button.prop('disabled', true);
+
+    if($armoire.val() != "") {
+      $button.prop('disabled', false);
+    }
+  }
+
   selectionArmoire(e) {
     // Stop submit event
     e.preventDefault();
 
     // Remove errors from previous submit call
     this.resetErrors();
+
+
+    // Display spinner
+    var $button = this.$form.find('[type="button"]');
 
     var $etage = this.$form.find('select[name="etage"]');
     var $aile = this.$form.find('select[name="aile"]');
@@ -284,12 +320,12 @@ export default class BandeauxForm {
     $etage.prop('disabled', true);
     $aile.prop('disabled', true);
     $armoire.prop('disabled', true);
+    $button.prop('disabled', true);
 
 
     $etage.children('option:not(:first)').remove();
     $aile.children('option:not(:first)').remove();
     $armoire.children('option:not(:first)').remove();
-
 
     if (this.$form.find('select[name="batimentid"]').val()) {
       $etage.prop('disabled', false);
@@ -332,6 +368,7 @@ export default class BandeauxForm {
                     for(var armoire=1; armoire < this.$vdis[local].nbarmoire +1; ++armoire){
                       if (this.$vdis[local].nbarmoire == 1) {
                         $armoire.append(new Option(armoire, armoire, false, true));
+                        $button.prop('disabled', false);
                       }
                       else $armoire.append(new Option(armoire, armoire, false, false));
                     }
@@ -352,13 +389,18 @@ export default class BandeauxForm {
     // Remove errors from previous submit call
     this.resetErrors();
 
+    var $button = this.$form.find('[type="button"]')
     var $etage = this.$form.find('select[name="etage"]');
     var $aile = this.$form.find('select[name="aile"]');
+    var $armoire = this.$form.find('select[name="armoireid"]');
 
+    $button.prop('disabled', true);
     $etage.prop('disabled', true);
     $aile.prop('disabled', true);
+    $armoire.prop('disabled', true);
     $etage.children('option:not(:first)').remove();
     $aile.children('option:not(:first)').remove();
+    $armoire.children('option:not(:first)').remove();
 
     if (this.$form.find('select[name="batimentid"]').val()) {
       $etage.prop('disabled', false);
