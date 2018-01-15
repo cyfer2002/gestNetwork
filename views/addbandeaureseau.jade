@@ -13,7 +13,7 @@ block content
             .bg
             h2 Ajout d'un Bandeau Réseau
             address
-              strong Taper la référence de l'armoire
+              strong Taper la référence du bandeau
             form(action="/locauxVdis/" method="post" accept-charset="UTF-8" novalidate="novalidate")
               - if (success)
                 .alert.alert-success.message-sent
@@ -55,12 +55,6 @@ block content
                   option(value="") Selectionner une Armoire
                 - if (errors.armoireid)
                   span.help-block #{errors.armoireid}
-              .form-group(class=(errors.description ? "has-danger" : ""))
-                label(for="description") Description&nbsp;
-                textarea.form-control(name="description" id="description" rows="4")
-                  | #{params.description}
-                - if (errors.description)
-                  span.help-block #{errors.description}
               button.btn.btn-primary(type="submit")
                 .fa.fa-spinner.fa-pulse
                 | Ajouter

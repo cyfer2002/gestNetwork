@@ -23,7 +23,7 @@ export default class Utilities {
     var aile;
     switch(lettre) {
       case 'N':
-        return 1;
+        aile = 1;
         break;
       case 'S':
         aile = 2;

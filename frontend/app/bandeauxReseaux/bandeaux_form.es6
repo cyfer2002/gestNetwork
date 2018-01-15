@@ -59,6 +59,7 @@ export default class BandeauxForm {
     var $select = this.$form.find('select[name="batimentid"]');
     var $etage = this.$form.find('select[name="etage"]');
     var $aile = this.$form.find('select[name="aile"]');
+    var $armoire= this.$form.find('select[name="armoireid"]');
 
     // Error found
     if (Object.keys(errors).length) {
@@ -73,10 +74,13 @@ export default class BandeauxForm {
     if ((this.$form.find('input[name="prise"]').val().length > 0) && ((this.$form.find('input[name="prise"]').val().length < 2))) {
       $etage.prop('disabled', true);
       $aile.prop('disabled', true);
+      $armoire.prop('disabled', true);
       $etage.children('option:not(:first)').remove();
       $aile.children('option:not(:first)').remove();
       $select.children('option:not(:first)').remove();
-      $select.prop('disabled', false);
+      $armoire.children('option:not(:first)').remove();
+
+      //$select.prop('disabled', false);
 
       // Ajax call
       $.ajax({
@@ -97,17 +101,31 @@ export default class BandeauxForm {
         }
       });
     } else if (this.$form.find('input[name="prise"]').val().length > 1) {
-        var etage, aile;
+        var etage, aile, armoire;
         var expr = /^[a-z]$/i ;
+        var exprArmoire = /^[1-9a-z]$/i ;
         if (expr.test((this.$form.find('input[name="prise"]').val()).substring(1,2))){
           etage = - Utilities.convertirLettreChiffreEtage((this.$form.find('input[name="prise"]').val()).substring(1,2));
         } else etage =(this.$form.find('input[name="prise"]').val()).substring(1,2);
         // Ajax call
         if (expr.test((this.$form.find('input[name="prise"]').val()).substring(2,3))){
-          alert(utilities.convertirLettreChiffreAile((this.$form.find('input[name="prise"]').val()).substring(2,3)));
+          aile = Utilities.convertirLettreChiffreAile((this.$form.find('input[name="prise"]').val()).substring(2,3));
         } else aile =(this.$form.find('input[name="prise"]').val()).substring(2,3);
+
+        if (exprArmoire.test((this.$form.find('input[name="prise"]').val()).substring(3,4))){
+          if (expr.test((this.$form.find('input[name="prise"]').val()).substring(3,4))){
+            armoire = Utilities.convertirLettreChiffreEtage((this.$form.find('input[name="prise"]').val()).substring(3,4));
+          } else armoire =(this.$form.find('input[name="prise"]').val()).substring(3,4);
+        } else {
+          if (expr.test((this.$form.find('input[name="prise"]').val()).substring(4,5))){
+            armoire = Utilities.convertirLettreChiffreEtage((this.$form.find('input[name="prise"]').val()).substring(4,5));
+          } else armoire =(this.$form.find('input[name="prise"]').val()).substring(4,5);
+        }
+
+        $armoire.append(new Option(armoire, armoire, false, true));
         $etage.append(new Option(etage, etage, false, true));
         $aile.append(new Option(config.aile[aile], config.aile[aile], false, true));
+
       } else {
       this.onLoad();
       this.$form.find('input[name="prise"]').focus();
