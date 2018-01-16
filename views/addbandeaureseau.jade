@@ -14,7 +14,7 @@ block content
             h2 Ajout d'un Bandeau Réseau
             address
               strong Taper la référence du bandeau
-            form(action="/locauxVdis/" method="post" accept-charset="UTF-8" novalidate="novalidate")
+            form(action="/bandeauxReseaux/" method="post" accept-charset="UTF-8" novalidate="novalidate")
               - if (success)
                 .alert.alert-success.message-sent
                   button(type="button" class="close" data-dismiss="alert" aria-label="Close")
@@ -27,7 +27,7 @@ block content
                     | #{errors.error}
               firstPart
                 .form-group(class=(errors.prise ? "has-danger" : ""))
-                  input.form-control(type="text" name="prise" id="optionList" placeholder="XXX-XX-XX[-XX]" autofocus="1" value=params.prise)
+                  input.form-control(type="text" name="prise" id="optionList" placeholder="XXX-XX-XX" autofocus="1" value=params.prise)
                   - if (errors.prise)
                     span.help-block #{errors.prise}
                 address
@@ -62,8 +62,12 @@ block content
                 .clearfix
               secondPart(style = "display:none")
                 address
-                  strong Nombre de bandeau à ajouter
+                  strong Etape N°2 - Nombre de bandeau à ajouter
                 .form-group(class=(errors.nbbandeau ? "has-danger" : ""))
                   input.form-control(type="number" name="nbbandeau" autofocus="1" value=(params.nbbandeau ? "" : "1"))
                   - if (errors.nbbandeau)
                     span.help-block #{errors.nbbandeau}
+                button.btn.btn-primary(type="submit")
+                  .fa.fa-spinner.fa-pulse
+                  | Valider
+                .clearfix

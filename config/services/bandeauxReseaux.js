@@ -30,9 +30,9 @@ router.post('/', function(req, res, next) {
   errors = {};
 
 
-  db.locauxvdis.create({
-    batiment: req.body.batiment,
-    etage: req.body.etage,
+  db.bandeauxreseaux.create({
+    armoireid: req.body.armoireid,
+    nbprises: req.body.nbprises,
     aile: req.body.aile,
     nbarmoire: "",
     description: req.body.description,
@@ -57,7 +57,7 @@ router.get('/', function(req, res, next) {
   if (Object.keys(error).length) {
     req.session.params = req.body;
     req.session.errors = { error: 'Veuillez activer Javascript.' };
-    return res.redirect('/locauxVdis/');
+    return res.redirect('/');
   }
   error = {};
 

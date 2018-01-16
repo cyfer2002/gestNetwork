@@ -1,4 +1,5 @@
 
+import checkInput from './check_form_input';
 import checkForm from './check_form';
 import Utilities from '../lib/utilities'
 
@@ -15,7 +16,7 @@ export default class BandeauxForm {
     this.$vdis = {};
     if (!this.$form.length) return;
 
-    this.$inputs = 'batimentid etage aile nbarmoire description prise'.split(' ').reduce((h, inputName) => {
+    this.$inputs = 'batimentid etage aile armoireid nbbandeau prise'.split(' ').reduce((h, inputName) => {
       h[inputName] = this.$form.find(`[name="${inputName}"]`);
       return h;
     }, {});
@@ -31,6 +32,8 @@ export default class BandeauxForm {
     this.$form.find('button[type="button"]').on('click', (e) => this.onClickButton(e));
 
     this.$form.find('input[name="prise"]').on('input', (e) => this.onInput(e));
+
+    $('#optionList').on('change', (e) => this.onInput(e));
 
     this.onLoad();
   }
@@ -50,6 +53,7 @@ export default class BandeauxForm {
       .find('.text-danger').remove();
   }
 
+
   onInput(e){
     // Stop submit event
     e.preventDefault();
@@ -61,7 +65,7 @@ export default class BandeauxForm {
     var $button = this.$form.find('[type="button"]').prop('disabled', true);
 
     //$('#list').children().remove();
-    var errors = checkForm(this.inputValues);
+    var errors = checkInput(this.inputValues);
 
     var $select = this.$form.find('select[name="batimentid"]');
     var $etage = this.$form.find('select[name="etage"]');
@@ -229,7 +233,7 @@ export default class BandeauxForm {
         }
       },
 
-      theme: "square"
+      theme: "plate-dark"
     };
 
     $('#optionList').easyAutocomplete(options);

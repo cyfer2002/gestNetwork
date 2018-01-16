@@ -1,12 +1,17 @@
 
-var REG_PRISE = /^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
-
 export default function checkForm(inputs) {
   var errors = {};
-  if (!inputs.prise.trim()) {
-    errors.prise = 'Ce champ est requis';
-  } else if (!REG_PRISE.test(inputs.email)) {
-    errors.prise = 'Numéro de prise non-valide';
+  if (!inputs.batimentid.trim()) {
+    errors.batimentid = 'Ce champ est requis';
+  }
+  if (!inputs.etage.trim()) {
+    errors.etage = 'Ce champ est requis';
+  }
+  if (!inputs.aile.trim()) {
+    errors.aile = 'Ce champ est requis';
+  }
+  if (!inputs.armoireid.trim()) {
+    errors.armoireid = 'Ce champ est requis';
   }
   return errors;
 }

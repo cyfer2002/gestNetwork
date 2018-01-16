@@ -13,6 +13,7 @@ var checkLocauxVdisForm = eval(babel.transformFileSync(path.join(__dirname, '../
 
 router.post('/', function(req, res, next) {
   var errors = checkLocauxVdisForm(req.body);
+  var locaux;
 
   // Vérification que l'utilisateur est loggé et a le droit d'ajouter un rôle, ainsi que le contenu n'ait pas été modifié durant le POST
   if (req.user) {
@@ -29,24 +30,53 @@ router.post('/', function(req, res, next) {
   }
   errors = {};
 
-
-  db.locauxvdis.create({
-    batimentid: req.body.batimentid,
-    etage: req.body.etage,
-    aile: req.body.aile,
-    nbarmoire: req.body.nbarmoire,
-    description: req.body.description,
-    created_at: new Date()
-  }).then(function(result) {
-    res.send({
-      message: "le local VDI a été créé"
-    });
-  }).catch(function (err) {
-    // handle error;
-    console.log(err);
-    res.send({
-      error: err.message
-    })
+  db.locauxvdis.findAll({
+    where: {
+      batimentid: req.body.batimentid,
+      etage: req.body.etage,
+      aile: req.body.aile
+    }
+  }).then(result => {
+    console.log(JSON.stringify(result));
+    if (!result.length) {
+      db.locauxvdis.create({
+        batimentid: req.body.batimentid,
+        etage: req.body.etage,
+        aile: req.body.aile,
+        nbarmoire: req.body.nbarmoire,
+        description: req.body.description,
+        created_at: new Date()
+      }).then(function(result) {
+        for (var i = 1; i <= req.body.nbarmoire; ++i){
+          db.armoiresreseaux.count().then(c => {
+            db.armoiresreseaux.create({
+              localvdiid: result.localvdiid,
+              numeroarmoire: c+1,
+              created_at:new Date()
+            }).catch(function (err) {
+              // handle error;
+              console.log(err);
+              res.send({
+                error: err.message
+              });
+            });
+          })
+        }
+        res.send({
+          message: "le local VDI a été créé, ainsi que les armoires réseaux."
+        });
+      }).catch(function (err) {
+        // handle error;
+        console.log(err);
+        res.send({
+          error: err.message
+        })
+      });
+    }else {
+      res.send({
+        error: "le local VDI existe déjà."
+      });
+    }
   });
 });
 

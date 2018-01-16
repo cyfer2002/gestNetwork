@@ -1,5 +1,9 @@
 import 'babel-polyfill';
+
+// Easy-Autocomplete
 import 'easy-autocomplete';
+import './config/easy-autocomplete.min.css'
+import './config/easy-autocomplete.themes.min.css'
 
 // Expose jQuery globally with webpack
 import $ from 'expose-loader?$!expose-loader?jQuery!jquery';
