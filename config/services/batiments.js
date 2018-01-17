@@ -4,6 +4,7 @@ var babel = require('babel-core');
 var path       = require('path');
 var bcrypt = require('bcrypt-nodejs');
 var db = require('../db-config');
+const Op = db.Sequelize.Op;
 
 /*Import Fonction JS.es6 CheckForm*/
 var checkBatimentsForm = eval(babel.transformFileSync(path.join(__dirname, '../../frontend/app/batiments/check_form.es6'), {
@@ -29,24 +30,36 @@ router.post('/', function(req, res, next) {
   }
   errors = {};
 
-  db.batiments.create({
-    nombatiment: req.body.nombatiment,
-    caractbatiment: req.body.caractbatiment,
-    nbaile: req.body.nbaile,
-    nbetageinf: req.body.nbetageinf,
-    nbetagesup: req.body.nbetagesup,
-    created_at: new Date()
-  }).then(function(result) {
-    console.log(result);
-    res.send({
-      message: "le Batiment " + result.nombatiment + " a été créé"
-    });
-  }).catch(function (err) {
-    // handle error;
-    console.log(err);
-    res.send({
-      error: err.message
-    })
+  db.batiments.findAll({
+    where: {
+      [Op.or] : [{caractbatiment: req.body.caractbatiment},{nombatiment: req.body.nombatiment}]
+    }
+  }).then(result => {
+    if(!result.length) {
+      db.batiments.create({
+        nombatiment: req.body.nombatiment,
+        caractbatiment: req.body.caractbatiment,
+        nbaile: req.body.nbaile,
+        nbetageinf: req.body.nbetageinf,
+        nbetagesup: req.body.nbetagesup,
+        created_at: new Date()
+      }).then(function(result) {
+        console.log(result);
+        res.send({
+          message: "le Batiment " + result.nombatiment + " a été créé"
+        });
+      }).catch(function (err) {
+        // handle error;
+        console.log(err);
+        res.send({
+          error: err.message
+        })
+      });
+    }else {
+      res.send({
+        error: "Le batiment existe déjà."
+      })
+    }
   });
 });
 

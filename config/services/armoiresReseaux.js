@@ -30,7 +30,7 @@ router.post('/', function(req, res, next) {
   errors = {};
 
 
-  db.armoiresReseaux.create({
+  db.armoiresreseaux.create({
     localvdiid: req.body.localvdiid,
     numeroarmoire: req.body.numeroarmoire,
     numerobandeau: req.body.numerobandeau,
@@ -60,7 +60,7 @@ router.get('/', function(req, res, next) {
   }
   error = {};
 
-  db.armoiresReseaux.findAll({
+  db.armoiresreseaux.findAll({
     order:[
       ['numeroarmoire', 'DESC'],
       ['etage', 'DESC'],
@@ -92,7 +92,7 @@ router.get('/:id', function(req, res, next) {
   }
   error = {};
 
-  db.armoiresReseaux.findById(id)
+  db.armoiresreseaux.findById(id)
     .then(armoire =>{
     if (req.xhr) {
       return res.send({
@@ -101,6 +101,37 @@ router.get('/:id', function(req, res, next) {
       });
     }
   }).catch(function (err) {
+    // handle error;
+    console.log(err);
+    res.send({
+      error: err.message
+    })
+  });
+});
+
+//
+router.get('/localvdi/:id', function(req, res, next) {
+  var error = {};
+  if (Object.keys(error).length) {
+    req.session.params = req.body;
+    req.session.errors = { error: 'Veuillez activer Javascript.' };
+    return res.redirect('/');
+  }
+  error = {};
+
+  db.armoiresreseaux.findAll({
+    where:{
+      localvdiid: req.params.id
+    }
+  })
+    .then(armoire =>{
+      if (req.xhr) {
+        return res.send({
+          message: armoire,
+          user: req.user
+        });
+      }
+    }).catch(function (err) {
     // handle error;
     console.log(err);
     res.send({

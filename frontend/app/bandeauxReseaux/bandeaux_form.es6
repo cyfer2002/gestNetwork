@@ -97,7 +97,6 @@ export default class BandeauxForm {
       $.ajax({
         url: '/batiments/char/' + (this.$form.find('input[name="prise"]').val()).substring(0, 1),
         method: 'GET',
-        data: this.$form.serialize(),
         dataType: 'JSON',
         success: (data) => {
           if (data.error) {
@@ -137,7 +136,7 @@ export default class BandeauxForm {
         if (armoire) $button.prop('disabled', false);
         $armoire.append(new Option(armoire, armoire, false, true));
         $etage.append(new Option(etage, etage, false, true));
-        $aile.append(new Option(config.aile[aile], config.aile[aile], false, true));
+        $aile.append(new Option(config.aile[aile], aile, false, true));
 
       } else {
       this.onLoad();
@@ -167,6 +166,8 @@ export default class BandeauxForm {
 
     // Display spinner
     var $button = this.$form.find('[type="submit"]').prop('disabled', true);
+    let $armoire = this.$form.find('[name="armoireid"]');
+    alert('coucou' + this.$form.serialize());
     
     // Ajax call
     $.ajax({
@@ -193,26 +194,6 @@ export default class BandeauxForm {
   onLoad() {
     // Remove errors from previous submit call
     this.resetErrors();
-
-
-    $.ajax({
-      url:      '/createJson',
-      method:   'GET',
-      data:     this.$form.serialize(),
-      dataType: 'JSON',
-      success: (data) => {
-        if (data.error) {
-          Flash.danger(data.error, this.$form);
-        }
-        if (data.message) {
-          Flash.success(data.message, this.$form);
-          this.$form[0].reset();
-        }
-      },
-      complete: () => {
-        $button.prop('disabled', false);
-      }
-    });
 
     var options = {
 
@@ -242,6 +223,7 @@ export default class BandeauxForm {
     var $select = this.$form.find('select[name="batimentid"]');
     var $etage = this.$form.find('select[name="etage"]');
     var $aile = this.$form.find('select[name="aile"]');
+    var $button = this.$form.find('[type="submit"]').prop('disabled', true);
 
     $etage.prop('disabled', true);
     $aile.prop('disabled', true);
@@ -285,9 +267,51 @@ export default class BandeauxForm {
   onClickButton(e){
     // Stop submit event
     e.preventDefault();
+    this.$form.find('[type="submit"]').prop('disabled', false);
 
     $('firstPart').fadeOut(400);
     $('secondPart').delay(500).fadeIn(1000);
+
+    var $select = this.$form.find('select[name="batimentid"]');
+    var $etage = this.$form.find('select[name="etage"]');
+    var $aile = this.$form.find('select[name="aile"]');
+    var $armoire = this.$form.find('select[name="armoireid"]');
+
+    $.ajax({
+      url: '/locauxvdis/' + ($select.val()),
+      method: 'GET',
+      dataType: 'JSON',
+      success: (data) => {
+        if (data.error) {
+          Flash.danger(data.error, this.$form);
+        }
+        if (data.message) {
+          for (let local in data.message ){
+            if((data.message[local].etage == $etage.val()) && (data.message[local].aile == $aile.val())){
+              $.ajax({
+                url: '/armoiresReseaux/localvdi/' + (data.message[local].localvdiid),
+                method: 'GET',
+                data: this.$form.serialize(),
+                dataType: 'JSON',
+                success: (result) => {
+                  if (result.error) {
+                    Flash.danger(data.error, this.$form);
+                  }
+                  if (result.message) {
+                    for ( let numarmoire in data.message){
+                      if (result.message[numarmoire].numeroarmoire == $armoire.val()) {
+                        $armoire.children('option:not(:first)').remove();
+                        $armoire.append(new Option($armoire.val(), result.message[numarmoire].armoireid, false, true));
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          }
+        }
+      }
+    });
 
   }
 
@@ -369,13 +393,26 @@ export default class BandeauxForm {
                 }
                 for (var local in this.$vdis) {
                   if((this.$vdis[local].etage == valetage) && (this.$vdis[local].aile == valaile)){
-                    for(var armoire=1; armoire < this.$vdis[local].nbarmoire +1; ++armoire){
-                      if (this.$vdis[local].nbarmoire == 1) {
-                        $armoire.append(new Option(armoire, armoire, false, true));
-                        $button.prop('disabled', false);
+                    let nbarmoire = this.$vdis[local].nbarmoire;
+                    $.ajax({
+                      url:      '/armoiresReseaux/localvdi/' + this.$vdis[local].localvdiid,
+                      method:   'GET',
+                      dataType: 'JSON',
+                      success: (data) => {
+                        if (data.error) {
+                          Flash.danger(data.error, this.$form);
+                        }
+                        if (data.message) {
+                          for (var armoire in data.message){
+                            if (nbarmoire == 1) {
+                              $armoire.append(new Option(data.message[armoire].numeroarmoire, data.message[armoire].armoireid, false, true));
+                              $button.prop('disabled', false);
+                            }
+                            else $armoire.append(new Option(data.message[armoire].numeroarmoire, data.message[armoire].armoireid, false, false));
+                          }
+                        }
                       }
-                      else $armoire.append(new Option(armoire, armoire, false, false));
-                    }
+                    });
                   }
                 }
               }

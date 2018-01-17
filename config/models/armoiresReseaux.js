@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     numeroarmoire: {
-      type: DataTypes.CHAR(2),
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     nbbandeau: {

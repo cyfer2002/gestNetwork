@@ -196,7 +196,7 @@ router.get('/createJson', function (req, res, next) {
       var i = 0;
       for (batiment in batiments){
         for (local in batiments[batiment].locauxvdis){
-          for (var armoire=1; armoire < batiments[batiment].locauxvdis[local].nbarmoire; ++armoire){
+          for (var armoire=1; armoire <= batiments[batiment].locauxvdis[local].nbarmoire; ++armoire){
             var charEtage;
             if (batiments[batiment].locauxvdis[local].etage < 0){
               charEtage = utilities.convertirChiffreLettreEtage(batiments[batiment].locauxvdis[local].etage)

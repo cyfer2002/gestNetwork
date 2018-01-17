@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     numerobandeau: {
-      type: DataTypes.CHAR(32),
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     nbprises: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,

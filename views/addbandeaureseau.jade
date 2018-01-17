@@ -51,7 +51,7 @@ block content
                         option(value="") Selectionner une Aile
                       - if (errors.aile)
                         span.help-block #{errors.aile}
-                .form-group(class=(errors.aile ? "has-danger" : ""))
+                .form-group(class=(errors.armoireid ? "has-danger" : ""))
                   select.form-control(name="armoireid" value=params.armoireid disabled=true)
                     option(value="") Selectionner une Armoire
                   - if (errors.armoireid)
@@ -67,7 +67,7 @@ block content
                   input.form-control(type="number" name="nbbandeau" autofocus="1" value=(params.nbbandeau ? "" : "1"))
                   - if (errors.nbbandeau)
                     span.help-block #{errors.nbbandeau}
-                button.btn.btn-primary(type="submit")
+                button.btn.btn-primary(type="submit" disabled)
                   .fa.fa-spinner.fa-pulse
                   | Valider
                 .clearfix

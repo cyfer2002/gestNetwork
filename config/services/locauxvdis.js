@@ -30,6 +30,7 @@ router.post('/', function(req, res, next) {
   }
   errors = {};
 
+
   db.locauxvdis.findAll({
     where: {
       batimentid: req.body.batimentid,
@@ -37,7 +38,6 @@ router.post('/', function(req, res, next) {
       aile: req.body.aile
     }
   }).then(result => {
-    console.log(JSON.stringify(result));
     if (!result.length) {
       db.locauxvdis.create({
         batimentid: req.body.batimentid,
@@ -47,21 +47,25 @@ router.post('/', function(req, res, next) {
         description: req.body.description,
         created_at: new Date()
       }).then(function(result) {
-        for (var i = 1; i <= req.body.nbarmoire; ++i){
-          db.armoiresreseaux.count().then(c => {
-            db.armoiresreseaux.create({
-              localvdiid: result.localvdiid,
-              numeroarmoire: c+1,
-              created_at:new Date()
-            }).catch(function (err) {
-              // handle error;
-              console.log(err);
-              res.send({
-                error: err.message
+          db.armoiresreseaux.count({
+            where:{
+              localvdiid: result.localvdiid
+            }
+          }).then(c => {
+            for (var i = 1; i <= req.body.nbarmoire; ++i) {
+              db.armoiresreseaux.create({
+                localvdiid: result.localvdiid,
+                numeroarmoire: c + i,
+                created_at: new Date()
+              }).catch(function (err) {
+                // handle error;
+                console.log(err);
+                res.send({
+                  error: err.message
+                });
               });
-            });
-          })
-        }
+            }
+          });
         res.send({
           message: "le local VDI a été créé, ainsi que les armoires réseaux."
         });
