@@ -12,8 +12,9 @@ var checkBandeauxForm = eval(babel.transformFileSync(path.join(__dirname, '../..
 
 
 router.post('/', function(req, res, next) {
-  console.log("coucou" + req.body);
+
   var errors = checkBandeauxForm(req.body);
+
   // Vérification que l'utilisateur est loggé et a le droit d'ajouter un rôle, ainsi que le contenu n'ait pas été modifié durant le POST
   if (req.user) {
     if (req.user.role == "admin")

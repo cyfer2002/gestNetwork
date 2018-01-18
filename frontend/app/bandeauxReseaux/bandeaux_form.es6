@@ -67,7 +67,7 @@ export default class BandeauxForm {
     //$('#list').children().remove();
     var errors = checkInput(this.inputValues);
 
-    var $select = this.$form.find('select[name="batimentid"]');
+    var $batiment = this.$form.find('select[name="batimentid"]');
     var $etage = this.$form.find('select[name="etage"]');
     var $aile = this.$form.find('select[name="aile"]');
     var $armoire= this.$form.find('select[name="armoireid"]');
@@ -86,9 +86,10 @@ export default class BandeauxForm {
       $etage.prop('disabled', true);
       $aile.prop('disabled', true);
       $armoire.prop('disabled', true);
+
       $etage.children('option:not(:first)').remove();
       $aile.children('option:not(:first)').remove();
-      $select.children('option:not(:first)').remove();
+      $batiment.children('option:not(:first)').remove();
       $armoire.children('option:not(:first)').remove();
 
       //$select.prop('disabled', false);
@@ -103,7 +104,7 @@ export default class BandeauxForm {
             Flash.danger(data.error, this.$form);
           }
           if (data.message) {
-            $select.append(new Option(data.message[0].nombatiment, data.message[0].batimentid, false, true));
+            $batiment.append(new Option(data.message[0].nombatiment, data.message[0].batimentid, false, true));
           }
         },
         complete: () => {
@@ -153,7 +154,9 @@ export default class BandeauxForm {
 
     // Check if user filled the form correctly
     var errors = checkForm(this.inputValues);
-
+    this.$form.find('select[name="etage"]').prop('disabled', false);
+    this.$form.find('select[name="aile"]').prop('disabled', false);
+    this.$form.find('select[name="armoireid"]').prop('disabled', false);
     // Error found
     if (Object.keys(errors).length) {
       // Display errors
@@ -166,8 +169,8 @@ export default class BandeauxForm {
 
     // Display spinner
     var $button = this.$form.find('[type="submit"]').prop('disabled', true);
-    let $armoire = this.$form.find('[name="armoireid"]');
-    alert('coucou' + this.$form.serialize());
+//    let $armoire = this.$form.find('[name="armoireid"]');
+//    alert('coucou' + this.$form.serialize());
     
     // Ajax call
     $.ajax({
@@ -223,7 +226,7 @@ export default class BandeauxForm {
     var $select = this.$form.find('select[name="batimentid"]');
     var $etage = this.$form.find('select[name="etage"]');
     var $aile = this.$form.find('select[name="aile"]');
-    var $button = this.$form.find('[type="submit"]').prop('disabled', true);
+    this.$form.find('[type="submit"]').prop('disabled', true);
 
     $etage.prop('disabled', true);
     $aile.prop('disabled', true);
@@ -286,21 +289,20 @@ export default class BandeauxForm {
           Flash.danger(data.error, this.$form);
         }
         if (data.message) {
-          for (let local in data.message ){
+          for (var local in data.message ){
             if((data.message[local].etage == $etage.val()) && (data.message[local].aile == $aile.val())){
               $.ajax({
                 url: '/armoiresReseaux/localvdi/' + (data.message[local].localvdiid),
                 method: 'GET',
-                data: this.$form.serialize(),
                 dataType: 'JSON',
                 success: (result) => {
                   if (result.error) {
                     Flash.danger(data.error, this.$form);
                   }
                   if (result.message) {
-                    for ( let numarmoire in data.message){
+                    for ( var numarmoire in data.message){
                       if (result.message[numarmoire].numeroarmoire == $armoire.val()) {
-                        $armoire.children('option:not(:first)').remove();
+                        //$armoire.children('option:not(:first)').remove();
                         $armoire.append(new Option($armoire.val(), result.message[numarmoire].armoireid, false, true));
                       }
                     }
@@ -393,7 +395,7 @@ export default class BandeauxForm {
                 }
                 for (var local in this.$vdis) {
                   if((this.$vdis[local].etage == valetage) && (this.$vdis[local].aile == valaile)){
-                    let nbarmoire = this.$vdis[local].nbarmoire;
+                    var nbarmoire = this.$vdis[local].nbarmoire;
                     $.ajax({
                       url:      '/armoiresReseaux/localvdi/' + this.$vdis[local].localvdiid,
                       method:   'GET',
